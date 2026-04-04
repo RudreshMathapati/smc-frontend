@@ -21,7 +21,6 @@ const socket = io(process.env.REACT_APP_API_URL, {
     transports: ["websocket"],
     withCredentials: true,
 });
-
 const containerStyle = {
     width: "100%",
     height: "100%",
