@@ -40,10 +40,10 @@ const AdminDashboard = () => {
   const fetchStats = async () => {
     try {
       const [busRes, routeRes, posRes, userRes] = await Promise.all([
-        axiosInstance.get("/buses"),
-        axiosInstance.get("/routes"),
-        axiosInstance.get("/pos-machines"),
-        axiosInstance.get("/users"),
+        axiosInstance.get("/api/buses"),
+        axiosInstance.get("/api/routes"),
+        axiosInstance.get("/api/pos-machines"),
+        axiosInstance.get("/api/users"),
       ]);
 
       setStats({

@@ -40,7 +40,7 @@ const Buses = () => {
         );
         toast.success("Bus updated successfully");
       } else {
-        await axiosInstance.post("/buses", form);
+        await axiosInstance.post("/api/buses", form);
         toast.success("Bus added successfully");
       }
 
@@ -83,7 +83,7 @@ const Buses = () => {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await axiosInstance.delete(`/buses/${id}`);
+      await axiosInstance.delete(`/api/buses/${id}`);
       toast.success("Bus deleted successfully");
       fetchAllBuses();
     } catch (error) {
@@ -96,7 +96,7 @@ const Buses = () => {
   const fetchAllBuses = async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get("/buses");
+      const res = await axiosInstance.get("/api/buses");
       setAllBuses(res.data);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to fetch buses");
