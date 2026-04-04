@@ -148,9 +148,9 @@ const ConductorBusAssign = () => {
   const [editingId, setEditingId] = useState(null);
 
   const fetchData = async () => {
-    const busRes = await axiosInstance.get("/buses");
-    const conductorRes = await axiosInstance.get("/conductors");
-    const assignRes = await axiosInstance.get("/conductor-bus");
+    const busRes = await axiosInstance.get("/api/buses");
+    const conductorRes = await axiosInstance.get("/api/conductors");
+    const assignRes = await axiosInstance.get("/api/conductor-bus");
 
     setBuses(busRes.data);
     setConductors(conductorRes.data);
@@ -173,7 +173,7 @@ const ConductorBusAssign = () => {
       const conductor = conductors.find((c) => c._id === form.conductorId);
 
       if (editingId) {
-        await axiosInstance.put(`/conductor-bus/${editingId}`, {
+        await axiosInstance.put(`/api/conductor-bus/${editingId}`, {
           busId: form.busId,
           assignedbusNumber: bus.busNumber,
           conductorId: form.conductorId,
@@ -181,7 +181,7 @@ const ConductorBusAssign = () => {
         });
         toast.success("Assignment updated");
       } else {
-        await axiosInstance.post("/conductor-bus", {
+        await axiosInstance.post("/api/conductor-bus", {
           busId: form.busId,
           assignedbusNumber: bus.busNumber,
           conductorId: form.conductorId,
@@ -216,7 +216,7 @@ const ConductorBusAssign = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this assignment?")) return;
     try {
-      await axiosInstance.delete(`/conductor-bus/${id}`);
+      await axiosInstance.delete(`/api/conductor-bus/${id}`);
       toast.success("Deleted successfully");
       fetchData();
     } catch (err) {

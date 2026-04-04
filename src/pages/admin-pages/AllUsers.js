@@ -18,7 +18,7 @@ const AllUsers = () => {
     const fetchAllUsers = async () => {
       try {
         setLoading(true);
-        const userRes = await axiosInstance.get("/users");
+        const userRes = await axiosInstance.get("/api/users");
         setAllUsers(userRes.data.allUsers);
       } catch (error) {
         toast.error(error.response?.data?.message || "Failed to fetch users");
