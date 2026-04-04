@@ -22,7 +22,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ phone, password }, thunkAPI) => {
     try {
-      const { data } = await axiosInstance.post("/auth/login", {
+      const { data } = await axiosInstance.post("/api/auth/login", {
         phone,
         password,
       });
