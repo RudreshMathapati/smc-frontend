@@ -6,7 +6,7 @@ export const fetchUser = createAsyncThunk(
   "auth/fetchUser",
   async (_, thunkAPI) => {
     try {
-      const { data } = await axiosInstance.get("/auth/me");
+      const { data } = await axiosInstance.get("/api/auth/me");
       console.log("in fetchUser slice", data);
       return data.user;
     } catch (err) {
