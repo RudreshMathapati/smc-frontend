@@ -1,0 +1,85 @@
+{
+  "login": {
+    "title": "लॉगिन",
+    "subtitle": "पुन्हा स्वागत! कृपया आपली माहिती भरा",
+    "phoneLabel": "फोन नंबर",
+    "phonePlaceholder": "१० अंकी फोन नंबर टाका",
+    "passwordLabel": "पासवर्ड",
+    "passwordPlaceholder": "आपला पासवर्ड टाका",
+    "rememberMe": "मला लक्षात ठेवा",
+    "forgotPassword": "पासवर्ड विसरलात?",
+    "button": "लॉगिन करा",
+    "loading": "लॉगिन सुरू आहे...",
+    "noAccount": "खाते नाही?",
+    "createOne": "नवीन तयार करा",
+    "success": "लॉगिन यशस्वी",
+    "errors": {
+      "phoneRequired": "फोन नंबर आवश्यक आहे",
+      "phoneInvalid": "फोन नंबर १० अंकांचा असावा",
+      "passwordRequired": "पासवर्ड आवश्यक आहे",
+      "passwordShort": "पासवर्ड किमान ६ अक्षरे असावा"
+    }
+  },
+  "signup": {
+    "title": "खाते तयार करा",
+    "subtitle": "बस ट्रॅकिंग नेटवर्कमध्ये सामील व्हा!",
+    "name_placeholder": "पूर्ण नाव",
+    "phone_placeholder": "फोन नंबर",
+    "password_placeholder": "पासवर्ड",
+    "confirm_password_placeholder": "पासवर्डची पुष्टी करा",
+    "sign_up": "नोंदणी करा",
+    "already_have_account": "आधीच खाते आहे?",
+    "login": "लॉगिन",
+    "password_mismatch": "पासवर्ड जुळत नाहीत."
+  },
+  "home": {
+    "trackMyBus": "ट्रॅक माय बस",
+    "findPerfectRoute": "तुमच्या प्रवासासाठी योग्य मार्ग शोधा",
+    "profile": "प्रोफाइल",
+    "viewProfile": "प्रोफाइल पहा",
+
+    "findBusRoute": "बस मार्ग शोधा",
+    "searchBusesBetween": "दोन ठिकाणांदरम्यान धावणाऱ्या बस शोधा",
+    "source": "सुरुवात",
+    "selectSource": "सुरुवातीचे ठिकाण निवडा",
+    "destination": "गंतव्य",
+    "selectDestination": "गंतव्य निवडा",
+    "findBuses": "बस शोधा",
+    "searchingBuses": "बस शोधत आहोत...",
+    "availableBuses": "उपलब्ध बस",
+    "route": "मार्ग",
+    "routes": "मार्ग",
+    "found": "सापडले",
+    "via": "मार्गे",
+    "na": "उपलब्ध नाही",
+
+    "noBusesFound": "कोणतीही बस सापडली नाही",
+    "noBusesAvailable": "{{source}} ते {{destination}} या दरम्यान कोणतीही बस उपलब्ध नाही.",
+    "tryDifferentRoute": "वेगळा मार्ग वापरून पहा",
+
+    "busSevaAllRights": "बस सेवा. सर्व हक्क राखीव.",
+    "makingTransportAccessible": "सर्वांसाठी वाहतूक सुलभ बनवत आहोत",
+
+    "toastStopsError": "थांबे मिळवताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.",
+    "toastInvalidRoute": "कृपया योग्य सुरुवात आणि गंतव्य निवडा.",
+    "toastNoBuses": "या मार्गासाठी कोणतीही बस उपलब्ध नाही.",
+    "toastBusError": "बसची माहिती मिळवताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा."
+  },
+  "profile": {
+    "login_first": "कृपया आधी लॉगिन करा",
+    "logout_success": "यशस्वीरित्या लॉगआउट झाले",
+    "logout_failed": "लॉगआउट अयशस्वी",
+    "name_empty": "नाव रिकामे असू शकत नाही",
+    "update_success": "प्रोफाइल यशस्वीरित्या अद्यतनित झाले",
+    "update_failed": "प्रोफाइल अद्यतन अयशस्वी",
+    "loading": "प्रोफाइल लोड होत आहे...",
+    "back_home": "मुख्यपृष्ठावर परत जा",
+    "role_admin": "प्रशासक",
+    "role_user": "नोंदणीकृत वापरकर्ता",
+    "phone": "फोन नंबर",
+    "email": "ईमेल पत्ता",
+    "na": "उपलब्ध नाही",
+    "logout": "लॉगआउट",
+    "member_since": "सदस्य असल्यापासून"
+  }
+}
