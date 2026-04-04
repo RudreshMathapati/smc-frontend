@@ -6,7 +6,7 @@ export const fetchUser = createAsyncThunk(
   "auth/fetchUser",
   async (_, thunkAPI) => {
     try {
-      const { data } = await axiosInstance.get("/auth/me");
+      const { data } = await axiosInstance.get("/api/auth/me");
       console.log("in fetchUser slice", data);
       return data.user;
     } catch (err) {
@@ -22,7 +22,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ phone, password }, thunkAPI) => {
     try {
-      const { data } = await axiosInstance.post("/auth/login", {
+      const { data } = await axiosInstance.post("/api/auth/login", {
         phone,
         password,
       });
@@ -40,7 +40,7 @@ export const updateProfile = createAsyncThunk(
   "auth/updateProfile",
   async (updates, thunkAPI) => {
     try {
-      const { data } = await axiosInstance.put("/users/profile", updates);
+      const { data } = await axiosInstance.put("/api/users/profile", updates);
       return data; // updated user object
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -55,7 +55,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, thunkAPI) => {
     try {
-      await axiosInstance.post("/auth/logout");
+      await axiosInstance.post("/api/auth/logout");
       return null;
     } catch (err) {
       return thunkAPI.rejectWithValue(
