@@ -60,11 +60,11 @@ const ManageRoutes = () => {
   const fetchRoutes = async () => {
     try {
       setLoading(true);
-      const res = await axiosInstance.get("/routes");
+      const res = await axiosInstance.get("/api/routes");
       setRoutes(res.data);
 
       // Fetch unique sources and destinations for suggestions
-      const stopsRes = await axiosInstance.get("/routes");
+      const stopsRes = await axiosInstance.get("/api/routes");
       setUniqueSources(stopsRes.data.sources);
       setUniqueDestinations(stopsRes.data.destinations);
     } catch (err) {
@@ -219,10 +219,10 @@ const ManageRoutes = () => {
       }
 
       if (editingRouteId) {
-        await axiosInstance.put(`/routes/${editingRouteId}`, form);
+        await axiosInstance.put(`/api/routes/${editingRouteId}`, form);
         toast.success("Route updated successfully");
       } else {
-        await axiosInstance.post("/routes", form);
+        await axiosInstance.post("/api/routes", form);
         toast.success("Route added successfully");
       }
 
@@ -262,7 +262,7 @@ const ManageRoutes = () => {
   const handleDelete = async (id) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(`/routes/${id}`);
+      await axiosInstance.delete(`/api/routes/${id}`);
       toast.success("Route deleted successfully");
       fetchRoutes();
     } catch (err) {

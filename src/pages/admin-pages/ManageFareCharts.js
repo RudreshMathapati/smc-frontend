@@ -11,7 +11,7 @@ const ManageFareCharts = () => {
   // Fetch fare chart
   const fetchFareChart = async () => {
     try {
-      const res = await axiosInstance.get("/farechart");
+      const res = await axiosInstance.get("/api/farechart");
       setFares(res.data.fares || {});
     } catch (err) {
       toast.error("Failed to load fare chart");
@@ -103,7 +103,7 @@ const ManageFareCharts = () => {
         expected++;
       }
 
-      await axiosInstance.put("/farechart", { fares: cleanedFares });
+      await axiosInstance.put("/api/farechart", { fares: cleanedFares });
 
       toast.success("Fare chart updated successfully");
     } catch (err) {

@@ -22,7 +22,7 @@ const ManagePasses = () => {
   const fetchPasses = async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get("/passes");
+      const res = await axiosInstance.get("/api/passes");
       setPasses(res.data);
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to fetch passes");
@@ -45,10 +45,10 @@ const ManagePasses = () => {
     try {
       setLoading(true);
       if (editingId) {
-        await axiosInstance.put(`/passes/${editingId}`, form);
+        await axiosInstance.put(`/api/passes/${editingId}`, form);
         toast.success("Pass updated successfully");
       } else {
-        await axiosInstance.post("/passes", form);
+        await axiosInstance.post("/api/passes", form);
         toast.success("Pass added successfully");
       }
       resetForm();
@@ -74,7 +74,7 @@ const ManagePasses = () => {
   const handleDelete = async (id) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(`/passes/${id}`);
+      await axiosInstance.delete(`/api/passes/${id}`);
       toast.success("Pass deleted successfully");
       fetchPasses();
     } catch (err) {

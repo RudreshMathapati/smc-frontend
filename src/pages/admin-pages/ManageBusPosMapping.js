@@ -25,7 +25,7 @@ const ManageBusPosMapping = () => {
 
   const fetchAllBuses = async () => {
     try {
-      const res = await axiosInstance.get(`/buses`);
+      const res = await axiosInstance.get(`/api/buses`);
       setBuses(res.data);
       setLoading((prev) => ({ ...prev, buses: false }));
     } catch (error) {
@@ -37,7 +37,7 @@ const ManageBusPosMapping = () => {
 
   const fetchAllPosMachines = async () => {
     try {
-      const res = await axiosInstance.get(`/pos-machines`);
+      const res = await axiosInstance.get(`/api/pos-machines`);
       setPosDevices(res.data);
       setLoading((prev) => ({ ...prev, posDevices: false }));
     } catch (error) {
@@ -49,7 +49,7 @@ const ManageBusPosMapping = () => {
 
   const fetchAllBusPosMappings = async () => {
     try {
-      const res = await axiosInstance.get(`/bus-pos-mapping`);
+      const res = await axiosInstance.get(`/api/bus-pos-mapping`);
       setAssignments(res.data.data);
       setLoading((prev) => ({ ...prev, assignments: false }));
     } catch (error) {
@@ -73,10 +73,10 @@ const ManageBusPosMapping = () => {
     setIsSubmitting(true);
     try {
       if (isEditing) {
-        await axiosInstance.put(`/bus-pos-mapping/${editingId}`, form);
+        await axiosInstance.put(`/api/bus-pos-mapping/${editingId}`, form);
         toast.success("Assignment updated successfully");
       } else {
-        await axiosInstance.post(`/bus-pos-mapping`, form);
+        await axiosInstance.post(`/api/bus-pos-mapping`, form);
         toast.success("Assignment created successfully");
       }
       setForm({ busId: "", posDeviceId: "" });
@@ -102,7 +102,7 @@ const ManageBusPosMapping = () => {
 
   const handleDelete = async (id) => {
       try {
-        await axiosInstance.delete(`/bus-pos-mapping/${id}`);
+        await axiosInstance.delete(`/api/bus-pos-mapping/${id}`);
         toast.success("Assignment deleted successfully");
         fetchAllBusPosMappings();
       } catch (err) {

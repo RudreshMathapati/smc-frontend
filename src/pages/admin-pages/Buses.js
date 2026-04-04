@@ -34,8 +34,7 @@ const Buses = () => {
 
     try {
       if (isEditing) {
-        await axiosInstance.put(
-          `/buses/${editingBusId}`,
+        await axiosInstance.put(`/api/buses/${editingBusId}`,
           form
         );
         toast.success("Bus updated successfully");

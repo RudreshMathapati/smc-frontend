@@ -22,7 +22,7 @@ const ManagePOSMachines = () => {
   const fetchPOSMachines = async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get("/pos-machines");
+      const res = await axiosInstance.get("/api/pos-machines");
       setPosMachines(res.data);
     } catch (err) {
       toast.error(
@@ -48,12 +48,12 @@ const ManagePOSMachines = () => {
       setLoading(true);
       if (editingId) {
         await axiosInstance.put(
-          `/pos-machines/${editingId}`,
+          `/api/pos-machines/${editingId}`,
           form
         );
         toast.success("POS Machine updated successfully");
       } else {
-        await axiosInstance.post("/pos-machines", form);
+        await axiosInstance.post("/api/pos-machines", form);
         toast.success("POS Machine added successfully");
       }
       resetForm();
@@ -79,7 +79,7 @@ const ManagePOSMachines = () => {
   const handleDelete = async (id) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(`/pos-machines/${id}`);
+      await axiosInstance.delete(`/api/pos-machines/${id}`);
       toast.success("POS Machine deleted successfully");
       fetchPOSMachines();
     } catch (err) {

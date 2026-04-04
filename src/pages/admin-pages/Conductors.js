@@ -23,7 +23,7 @@ const ManageConductors = () => {
     const fetchConductors = async () => {
         setLoading(true);
         try {
-            const res = await axiosInstance.get("/conductors");
+            const res = await axiosInstance.get("/api/conductors");
             setConductors(res.data);
         } catch (err) {
             toast.error(
@@ -57,10 +57,10 @@ const ManageConductors = () => {
                 const updateData = { name: form.name, type: form.type };
                 if (form.password) updateData.password = form.password;
 
-                await axiosInstance.put(`/conductors/${editingId}`, updateData);
+                await axiosInstance.put(`/api/conductors/${editingId}`, updateData);
                 toast.success("Conductor updated successfully");
             } else {
-                await axiosInstance.post("/conductors/register", form);
+                await axiosInstance.post("/api/conductors/register", form);
                 toast.success("Conductor added successfully");
             }
             resetForm();
@@ -87,7 +87,7 @@ const ManageConductors = () => {
     const handleDelete = async (id) => {
         try {
             setLoading(true);
-            await axiosInstance.delete(`/conductors/${id}`);
+            await axiosInstance.delete(`/api/conductors/${id}`);
             toast.success("Conductor deleted successfully");
             fetchConductors();
         } catch (err) {

@@ -61,7 +61,7 @@ const GoogleLiveMap = ({ source, destination }) => {
     useEffect(() => {
         const fetchGps = async () => {
             setIsLoading(true);
-            const res = await axiosInstance.get("/gps");
+            const res = await axiosInstance.get("/api/gps");
             if (!res.data?.success) return;
 
             const obj = {};

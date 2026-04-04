@@ -32,9 +32,9 @@ const ManageBusRouteMapping = () => {
       setLoading({ buses: true, routes: true, mappings: true });
 
       const [busRes, routeRes, mapRes] = await Promise.all([
-        axiosInstance.get(`/buses`),
-        axiosInstance.get(`/routes`),
-        axiosInstance.get(`/bus-routes-mapping`),
+        axiosInstance.get(`/api/buses`),
+        axiosInstance.get(`/api/routes`),
+        axiosInstance.get(`/api/bus-routes-mapping`),
       ]);
 
       setBuses(busRes.data);
@@ -82,10 +82,10 @@ const ManageBusRouteMapping = () => {
 
     try {
       if (editingId) {
-        await axiosInstance.put(`/bus-routes-mapping/${editingId}`, form);
+        await axiosInstance.put(`/api/bus-routes-mapping/${editingId}`, form);
         toast.success("Mapping updated successfully");
       } else {
-        await axiosInstance.post(`/bus-routes-mapping`, form);
+        await axiosInstance.post(`/api/bus-routes-mapping`, form);
         toast.success("Mapping created successfully");
       }
 
@@ -125,7 +125,7 @@ const ManageBusRouteMapping = () => {
 
   const handleDelete = async (id) => {
       try {
-        await axiosInstance.delete(`/bus-routes-mapping/${id}`);
+        await axiosInstance.delete(`/api/bus-routes-mapping/${id}`);
         toast.success("Mapping deleted successfully");
         fetchAll();
       } catch (err) {

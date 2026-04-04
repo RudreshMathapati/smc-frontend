@@ -23,7 +23,7 @@ const ManageStopPrices = () => {
   const fetchStopPrices = async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get("/stop-prices");
+      const res = await axiosInstance.get("/api/stop-prices");
       setStopPrices(res.data);
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to fetch stop prices");
@@ -46,10 +46,10 @@ const ManageStopPrices = () => {
     try {
       setLoading(true);
       if (editingId) {
-        await axiosInstance.put(`/stop-prices/${editingId}`, form);
+        await axiosInstance.put(`/api/stop-prices/${editingId}`, form);
         toast.success("Stop price updated successfully");
       } else {
-        await axiosInstance.post("/stop-prices", form);
+        await axiosInstance.post("/api/stop-prices", form);
         toast.success("Stop price added successfully");
       }
       resetForm();
@@ -76,7 +76,7 @@ const ManageStopPrices = () => {
   const handleDelete = async (id) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(`/stop-prices/${id}`);
+      await axiosInstance.delete(`/api/stop-prices/${id}`);
       toast.success("Stop deleted successfully");
       fetchStopPrices();
     } catch (err) {

@@ -23,7 +23,7 @@ const getReport = async () => {
 
   try {
     const res = await axiosInstance.get(
-      `/reports/conductor?batch_no=${batchNo}&date=${date}`,
+      `/api/reports/conductor?batch_no=${batchNo}&date=${date}`,
     );
     setReport(res.data);
     toast.success("Report loaded successfully");
