@@ -64,7 +64,7 @@ const SignUp = () => {
 
         try {
             console.log("in Sign up Form Data:", form); // Debugging line
-            const res = await axiosInstance.post("/auth/register", form);
+            const res = await axiosInstance.post("/api/auth/register", form);
             console.log(res.data);
             navigate("/home");
             toast.success(t("signup.success"));

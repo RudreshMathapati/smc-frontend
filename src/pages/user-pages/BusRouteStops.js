@@ -30,7 +30,7 @@ const BusRouteStops = () => {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await axiosInstance.get(`/bus-routes-mapping/${busID}`);
+      const res = await axiosInstance.get(`/api/bus-routes-mapping/${busID}`);
       setBusRouteData(res.data.data);
       setLastUpdated(new Date());
       setError(null);

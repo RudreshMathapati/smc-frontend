@@ -181,7 +181,7 @@ const LiveBuses = () => {
 
     const fetchGps = async () => {
         try {
-            const res = await axiosInstance.get("/gps");
+            const res = await axiosInstance.get("/api/gps");
             const data = res.data;
             const latest = getLatestPerDevice(data);
             setMarkers(

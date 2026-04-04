@@ -43,7 +43,7 @@ const Home = () => {
         const fetchStops = async () => {
             try {
                 setLoadingStops(true);
-                const res = await axiosInstance.get(`/routes`);
+                const res = await axiosInstance.get(`/api/routes`);
                 setRoutes(res.data);
                 const sources = [
                     ...new Set(res.data.map((item) => item.source)),
@@ -90,7 +90,7 @@ const Home = () => {
         setMatchedBuses([]);
         try {
             setLoadingBuses(true);
-            const res = await axiosInstance.get(`/bus-routes-mapping`);
+            const res = await axiosInstance.get(`/api/bus-routes-mapping`);
             const filteredBuses = res.data.filter(
                 (bus) =>
                     bus?.route?.source === source &&
