@@ -338,31 +338,35 @@ const ManageRoutes = () => {
   //   setShowForm(true);
   //   window.scrollTo({ top: 0, behavior: "smooth" });
   // };
- const handleEdit = (route) => {
-  setEditingRouteId(route._id);
+  const handleEdit = (route) => {
+    setEditingRouteId(route._id);
 
-  // ✅ DEEP COPY (VERY IMPORTANT)
-  const deepTrips = JSON.parse(JSON.stringify(route.trips || [
-    {
-      sourceTime: "",
-      destinationTime: "",
-      stops: [],
-    },
-  ]));
+    // ✅ DEEP COPY (VERY IMPORTANT)
+    const deepTrips = JSON.parse(
+      JSON.stringify(
+        route.trips || [
+          {
+            sourceTime: "",
+            destinationTime: "",
+            stops: [],
+          },
+        ],
+      ),
+    );
 
-  setForm({
-    source: route.source,
-    destination: route.destination,
-    via: route.via || "",
-    distance: route.distance || "",
-    estimatedDuration: route.estimatedDuration || "",
-    trips: deepTrips, // ✅ FIXED
-  });
+    setForm({
+      source: route.source,
+      destination: route.destination,
+      via: route.via || "",
+      distance: route.distance || "",
+      estimatedDuration: route.estimatedDuration || "",
+      trips: deepTrips, // ✅ FIXED
+    });
 
-  setCurrentTripIndex(0);
-  setShowForm(true);
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
+    setCurrentTripIndex(0);
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -647,12 +651,12 @@ const ManageRoutes = () => {
                   <button
                     type="button"
                     onClick={() => {
-  const deepCopy = JSON.parse(
-    JSON.stringify(form.trips[currentTripIndex].stops)
-  );
-  setBulkStops(deepCopy);
-  setEditAllMode(true);
-}}
+                      const deepCopy = JSON.parse(
+                        JSON.stringify(form.trips[currentTripIndex].stops),
+                      );
+                      setBulkStops(deepCopy);
+                      setEditAllMode(true);
+                    }}
                     className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
                   >
                     Edit All Stops
@@ -687,7 +691,9 @@ const ManageRoutes = () => {
                                     value={stop.name}
                                     onChange={(e) => {
                                       const arr = bulkStops.map((stop, i) =>
-                                        i === index ? { ...stop, name: e.target.value }: stop,
+                                        i === index
+                                          ? { ...stop, name: e.target.value }
+                                          : stop,
                                       );
                                       setBulkStops(arr);
                                     }}
@@ -773,21 +779,21 @@ const ManageRoutes = () => {
                       <div className="mt-4 flex gap-3">
                         <button
                           onClick={() => {
-  const updatedTrips = form.trips.map((trip, i) => {
-    if (i !== currentTripIndex) return trip;
+                            const updatedTrips = form.trips.map((trip, i) => {
+                              if (i !== currentTripIndex) return trip;
 
-    return {
-      ...trip,
-      stops: bulkStops.map((s, idx) => ({
-        ...s,
-        sequence: idx + 1,
-      })),
-    };
-  });
+                              return {
+                                ...trip,
+                                stops: bulkStops.map((s, idx) => ({
+                                  ...s,
+                                  sequence: idx + 1,
+                                })),
+                              };
+                            });
 
-  setForm({ ...form, trips: updatedTrips });
-  setEditAllMode(false);
-}}
+                            setForm({ ...form, trips: updatedTrips });
+                            setEditAllMode(false);
+                          }}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm"
                         >
                           Save All Changes
