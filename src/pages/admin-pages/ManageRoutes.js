@@ -18,6 +18,7 @@ import axiosInstance from "../../utils/axiosInstance";
 
 const ManageRoutes = () => {
   const stopNameRef = useRef(null);
+  const [originalStopsBackup, setOriginalStopsBackup] = useState([]);
   const [insertMessage, setInsertMessage] = useState("");
   const [routes, setRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -651,19 +652,18 @@ const ManageRoutes = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      const deepCopy = form.trips[currentTripIndex].stops.map(
-                        (stop) => ({
-                          name: stop.name || "",
-                          timingOffset: stop.timingOffset || "",
-                          latitude: stop.latitude || "",
-                          longitude: stop.longitude || "",
-                          stage: stop.stage || "",
-                          sequence: stop.sequence || 0,
-                        }),
-                      );
-                      setBulkStops(deepCopy);
-                      setEditAllMode(true);
-                    }}
+  const original = form.trips[currentTripIndex].stops;
+
+  // ✅ backup original (for cancel)
+  const backup = JSON.parse(JSON.stringify(original));
+  setOriginalStopsBackup(backup);
+
+  // ✅ editable copy (for table)
+  const editable = JSON.parse(JSON.stringify(original));
+  setBulkStops(editable);
+
+  setEditAllMode(true);
+}}
                     className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
                   >
                     Edit All Stops
@@ -695,46 +695,30 @@ const ManageRoutes = () => {
 
                                 <td className="p-2 border">
                                   <input
-                                    value={stop.name}
-                                    onChange={(e) => {
-                                      const updated = bulkStops.map((s, i) => {
-                                        if (i !== index) return s;
-
-                                        return {
-                                          name: e.target.value,
-                                          timingOffset: s.timingOffset,
-                                          latitude: s.latitude,
-                                          longitude: s.longitude,
-                                          stage: s.stage,
-                                          sequence: s.sequence,
-                                        };
-                                      });
-
-                                      setBulkStops(updated);
-                                    }}
+                                    value={stop.name || ""}
+  onChange={(e) => {
+    const updated = bulkStops.map((s, i) =>
+      i === index
+        ? { ...s, name: e.target.value }
+        : s
+    );
+    setBulkStops(updated);
+  }}
                                     className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                   />
                                 </td>
 
                                 <td className="p-2 border">
                                   <input
-                                    value={stop.timingOffset}
-                                    onChange={(e) => {
-                                      const updated = bulkStops.map((s, i) => {
-                                        if (i !== index) return s;
-
-                                        return {
-                                          name: s.name,
-                                          timingOffset: e.target.value,
-                                          latitude: s.latitude,
-                                          longitude: s.longitude,
-                                          stage: s.stage,
-                                          sequence: s.sequence,
-                                        };
-                                      });
-
-                                      setBulkStops(updated);
-                                    }}
+                                    value={stop.timingOffset || ""}
+  onChange={(e) => {
+    const updated = bulkStops.map((s, i) =>
+      i === index
+        ? { ...s, timingOffset: e.target.value }
+        : s
+    );
+    setBulkStops(updated);
+  }}
                                     className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                   />
                                 </td>
@@ -742,59 +726,45 @@ const ManageRoutes = () => {
                                 <td className="p-2 border">
                                   <input
                                     type="number"
-                                    value={stop.stage}
-                                    onChange={(e) => {
-                                      const updated = bulkStops.map((s, i) => {
-                                        if (i !== index) return s;
-
-                                        return {
-                                          name: s.name,
-                                          timingOffset: s.timingOffset,
-                                          latitude: s.latitude,
-                                          longitude: s.longitude,
-                                          stage: e.target.value,
-                                          sequence: s.sequence,
-                                        };
-                                      });
-
-                                      setBulkStops(updated);
-                                    }}
+                                    value={stop.stage || ""}
+  onChange={(e) => {
+    const updated = bulkStops.map((s, i) =>
+      i === index
+        ? { ...s, stage: e.target.value }
+        : s
+    );
+    setBulkStops(updated);
+  }}
                                     className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                   />
                                 </td>
 
                                 <td className="p-2 border">
                                   <input
-                                    value={stop.latitude}
-                                    onChange={(e) => {
-                                      const arr = bulkStops.map((stop, i) =>
-                                        i === index
-                                          ? {
-                                              ...stop,
-                                              latitude: e.target.value,
-                                            }
-                                          : stop,
-                                      );
-                                      setBulkStops(arr);
-                                    }}
+                                    value={stop.latitude || ""}
+  onChange={(e) => {
+    const updated = bulkStops.map((s, i) =>
+      i === index
+        ? { ...s, latitude: e.target.value }
+        : s
+    );
+    setBulkStops(updated);
+  }}
                                     className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                   />
                                 </td>
 
                                 <td className="p-2 border">
                                   <input
-                                    value={stop.longitude}
-                                    onChange={(e) => {
-                                      const arr = bulkStops.map((stop, i) =>
-                                        i === index
-                                          ? {
-                                              ...stop,
-                                              longitude: e.target.value,
-                                            }
-                                          : stop,
-                                      );
-                                      setBulkStops(arr);
-                                    }}
+                                    value={stop.longitude || ""}
+  onChange={(e) => {
+    const updated = bulkStops.map((s, i) =>
+      i === index
+        ? { ...s, longitude: e.target.value }
+        : s
+    );
+    setBulkStops(updated);
+  }}
                                     className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                   />
                                 </td>
@@ -807,21 +777,21 @@ const ManageRoutes = () => {
                       <div className="mt-4 flex gap-3">
                         <button
                           onClick={() => {
-                            const updatedTrips = form.trips.map((trip, i) => {
-                              if (i !== currentTripIndex) return trip;
+  const updatedTrips = form.trips.map((trip, i) => {
+    if (i !== currentTripIndex) return trip;
 
-                              return {
-                                ...trip,
-                                stops: bulkStops.map((s, idx) => ({
-                                  ...s,
-                                  sequence: idx + 1,
-                                })),
-                              };
-                            });
+    return {
+      ...trip,
+      stops: bulkStops.map((s, idx) => ({
+        ...s,
+        sequence: idx + 1,
+      })),
+    };
+  });
 
-                            setForm({ ...form, trips: updatedTrips });
-                            setEditAllMode(false);
-                          }}
+  setForm({ ...form, trips: updatedTrips });
+  setEditAllMode(false);
+}}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm"
                         >
                           Save All Changes
@@ -829,13 +799,12 @@ const ManageRoutes = () => {
 
                         <button
                           onClick={() => {
-                            // Original stops wapas laao
-                            const originalStops = form.trips[
-                              currentTripIndex
-                            ].stops.map((stop) => ({ ...stop }));
-                            setBulkStops(originalStops);
-                            setEditAllMode(false);
-                          }}
+  // ✅ restore original data
+  const restored = JSON.parse(JSON.stringify(originalStopsBackup));
+  setBulkStops(restored);
+
+  setEditAllMode(false);
+}}
                           className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm"
                         >
                           Cancel
