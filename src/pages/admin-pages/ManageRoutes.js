@@ -338,34 +338,31 @@ const ManageRoutes = () => {
   //   setShowForm(true);
   //   window.scrollTo({ top: 0, behavior: "smooth" });
   // };
-  const handleEdit = (route) => {
-    setEditingRouteId(route._id);
+ const handleEdit = (route) => {
+  setEditingRouteId(route._id);
 
-    const deepTrips = JSON.parse(
-      JSON.stringify(
-        route.trips || [
-          {
-            sourceTime: "",
-            destinationTime: "",
-            stops: [],
-          },
-        ],
-      ),
-    );
+  // ✅ DEEP COPY (VERY IMPORTANT)
+  const deepTrips = JSON.parse(JSON.stringify(route.trips || [
+    {
+      sourceTime: "",
+      destinationTime: "",
+      stops: [],
+    },
+  ]));
 
-    setForm({
-      source: route.source,
-      destination: route.destination,
-      via: route.via || "",
-      distance: route.distance || "",
-      estimatedDuration: route.estimatedDuration || "",
-      trips: deepTrips,
-    });
+  setForm({
+    source: route.source,
+    destination: route.destination,
+    via: route.via || "",
+    distance: route.distance || "",
+    estimatedDuration: route.estimatedDuration || "",
+    trips: deepTrips, // ✅ FIXED
+  });
 
-    setCurrentTripIndex(0);
-    setShowForm(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  setCurrentTripIndex(0);
+  setShowForm(true);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
 
   const handleDelete = async (id) => {
     try {
@@ -650,12 +647,12 @@ const ManageRoutes = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      const deepCopy = JSON.parse(
-                        JSON.stringify(form.trips[currentTripIndex].stops),
-                      );
-                      setBulkStops(deepCopy);
-                      setEditAllMode(true);
-                    }}
+  const deepCopy = JSON.parse(
+    JSON.stringify(form.trips[currentTripIndex].stops)
+  );
+  setBulkStops(deepCopy);
+  setEditAllMode(true);
+}}
                     className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
                   >
                     Edit All Stops
@@ -690,9 +687,7 @@ const ManageRoutes = () => {
                                     value={stop.name}
                                     onChange={(e) => {
                                       const arr = bulkStops.map((stop, i) =>
-                                        i === index
-                                          ? { ...stop, name: e.target.value }
-                                          : stop,
+                                        i === index ? { ...stop, name: e.target.value }: stop,
                                       );
                                       setBulkStops(arr);
                                     }}
