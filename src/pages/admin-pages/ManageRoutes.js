@@ -649,170 +649,209 @@ const ManageRoutes = () => {
                     </svg>
                     Stops for Trip {currentTripIndex + 1}
                   </h4>
-                  <button
-                    type="button"
-                    onClick={() => {
-  const original = form.trips[currentTripIndex].stops;
+                  {
+                  /* Edit All Stops Button */}
+<button
+  type="button"
+  onClick={() => {
+    const original = form.trips[currentTripIndex].stops;
 
-  // ✅ backup original (for cancel)
-  const backup = JSON.parse(JSON.stringify(original));
-  setOriginalStopsBackup(backup);
+    // ✅ FULLY ISOLATED COPY (NO REFERENCE)
+    const editable = original.map((s) => ({
+      name: s.name || "",
+      timingOffset: s.timingOffset || "",
+      latitude: s.latitude || "",
+      longitude: s.longitude || "",
+      stage: s.stage || "",
+      sequence: s.sequence || 0,
+    }));
 
-  // ✅ editable copy (for table)
-  const editable = JSON.parse(JSON.stringify(original));
-  setBulkStops(editable);
+    const backup = original.map((s) => ({
+      name: s.name || "",
+      timingOffset: s.timingOffset || "",
+      latitude: s.latitude || "",
+      longitude: s.longitude || "",
+      stage: s.stage || "",
+      sequence: s.sequence || 0,
+    }));
 
-  setEditAllMode(true);
-}}
-                    className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
-                  >
-                    Edit All Stops
-                  </button>
-                  {editAllMode && (
-                    <div className="bg-white p-4 rounded-lg mb-4 border border-gray-200 shadow-sm">
-                      <h5 className="text-md font-semibold text-gray-800 mb-3">
-                        Edit All Stops
-                      </h5>
-
-                      <div className="overflow-x-auto">
-                        <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
-                          <thead className="bg-gray-100">
-                            <tr>
-                              <th className="p-2 border">Seq</th>
-                              <th className="p-2 border">Name</th>
-                              <th className="p-2 border">Time</th>
-                              <th className="p-2 border">Stage</th>
-                              <th className="p-2 border">Lat</th>
-                              <th className="p-2 border">Lng</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {bulkStops.map((stop, index) => (
-                              <tr key={index} className="hover:bg-gray-50">
-                                <td className="p-2 border text-center font-medium">
-                                  {index + 1}
-                                </td>
-
-                                <td className="p-2 border">
-                                  <input
-                                    value={stop.name || ""}
-  onChange={(e) => {
-    const updated = bulkStops.map((s, i) =>
-      i === index
-        ? { ...s, name: e.target.value }
-        : s
-    );
-    setBulkStops(updated);
+    setBulkStops(editable);
+    setOriginalStopsBackup(backup);
+    setEditAllMode(true);
   }}
-                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                                  />
-                                </td>
+  className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
+>
+  Edit All Stops
+</button>
 
-                                <td className="p-2 border">
-                                  <input
-                                    value={stop.timingOffset || ""}
-  onChange={(e) => {
-    const updated = bulkStops.map((s, i) =>
-      i === index
-        ? { ...s, timingOffset: e.target.value }
-        : s
-    );
-    setBulkStops(updated);
-  }}
-                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                                  />
-                                </td>
+{/* Edit Table */}
+{editAllMode && (
+  <div className="bg-white p-4 rounded-lg mb-4 border border-gray-200 shadow-sm">
+    <h5 className="text-md font-semibold text-gray-800 mb-3">
+      Edit All Stops
+    </h5>
 
-                                <td className="p-2 border">
-                                  <input
-                                    type="number"
-                                    value={stop.stage || ""}
-  onChange={(e) => {
-    const updated = bulkStops.map((s, i) =>
-      i === index
-        ? { ...s, stage: e.target.value }
-        : s
-    );
-    setBulkStops(updated);
-  }}
-                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                                  />
-                                </td>
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="p-2 border">Seq</th>
+            <th className="p-2 border">Name</th>
+            <th className="p-2 border">Time</th>
+            <th className="p-2 border">Stage</th>
+            <th className="p-2 border">Lat</th>
+            <th className="p-2 border">Lng</th>
+          </tr>
+        </thead>
 
-                                <td className="p-2 border">
-                                  <input
-                                    value={stop.latitude || ""}
-  onChange={(e) => {
-    const updated = bulkStops.map((s, i) =>
-      i === index
-        ? { ...s, latitude: e.target.value }
-        : s
-    );
-    setBulkStops(updated);
-  }}
-                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                                  />
-                                </td>
+        <tbody>
+          {bulkStops.map((stop, index) => (
+            <tr key={index}>
+              <td className="p-2 border text-center">
+                {index + 1}
+              </td>
 
-                                <td className="p-2 border">
-                                  <input
-                                    value={stop.longitude || ""}
-  onChange={(e) => {
-    const updated = bulkStops.map((s, i) =>
-      i === index
-        ? { ...s, longitude: e.target.value }
-        : s
-    );
-    setBulkStops(updated);
-  }}
-                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                                  />
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+              {/* NAME */}
+              <td className="p-2 border">
+                <input
+                  value={stop.name}
+                  onChange={(e) => {
+                    setBulkStops((prev) =>
+                      prev.map((s, i) =>
+                        i === index
+                          ? { ...s, name: e.target.value }
+                          : s
+                      )
+                    );
+                  }}
+                  className="w-full p-1 border rounded"
+                />
+              </td>
 
-                      <div className="mt-4 flex gap-3">
-                        <button
-                          onClick={() => {
-  const updatedTrips = form.trips.map((trip, i) => {
-    if (i !== currentTripIndex) return trip;
+              {/* TIME */}
+              <td className="p-2 border">
+                <input
+                  value={stop.timingOffset}
+                  onChange={(e) => {
+                    setBulkStops((prev) =>
+                      prev.map((s, i) =>
+                        i === index
+                          ? { ...s, timingOffset: e.target.value }
+                          : s
+                      )
+                    );
+                  }}
+                  className="w-full p-1 border rounded"
+                />
+              </td>
 
-    return {
-      ...trip,
-      stops: bulkStops.map((s, idx) => ({
-        ...s,
-        sequence: idx + 1,
-      })),
-    };
-  });
+              {/* STAGE */}
+              <td className="p-2 border">
+                <input
+                  type="number"
+                  value={stop.stage}
+                  onChange={(e) => {
+                    setBulkStops((prev) =>
+                      prev.map((s, i) =>
+                        i === index
+                          ? { ...s, stage: e.target.value }
+                          : s
+                      )
+                    );
+                  }}
+                  className="w-full p-1 border rounded"
+                />
+              </td>
 
-  setForm({ ...form, trips: updatedTrips });
-  setEditAllMode(false);
-}}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm"
-                        >
-                          Save All Changes
-                        </button>
+              {/* LAT */}
+              <td className="p-2 border">
+                <input
+                  value={stop.latitude}
+                  onChange={(e) => {
+                    setBulkStops((prev) =>
+                      prev.map((s, i) =>
+                        i === index
+                          ? { ...s, latitude: e.target.value }
+                          : s
+                      )
+                    );
+                  }}
+                  className="w-full p-1 border rounded"
+                />
+              </td>
 
-                        <button
-                          onClick={() => {
-  // ✅ restore original data
-  const restored = JSON.parse(JSON.stringify(originalStopsBackup));
-  setBulkStops(restored);
+              {/* LNG */}
+              <td className="p-2 border">
+                <input
+                  value={stop.longitude}
+                  onChange={(e) => {
+                    setBulkStops((prev) =>
+                      prev.map((s, i) =>
+                        i === index
+                          ? { ...s, longitude: e.target.value }
+                          : s
+                      )
+                    );
+                  }}
+                  className="w-full p-1 border rounded"
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
 
-  setEditAllMode(false);
-}}
-                          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  <div className="bg-blue-50 p-4 rounded-lg mb-5 border border-blue-100">
+    {/* BUTTONS */}
+    <div className="mt-4 flex gap-3">
+      
+      {/* SAVE */}
+      <button
+        onClick={() => {
+          const updatedTrips = form.trips.map((trip, i) => {
+            if (i !== currentTripIndex) return trip;
+
+            return {
+              ...trip,
+              stops: bulkStops.map((s, idx) => ({
+                name: s.name,
+                timingOffset: s.timingOffset,
+                latitude: s.latitude,
+                longitude: s.longitude,
+                stage: Number(s.stage),
+                sequence: idx + 1,
+              })),
+            };
+          });
+
+          setForm((prev) => ({
+            ...prev,
+            trips: updatedTrips,
+          }));
+
+          setEditAllMode(false);
+        }}
+        className="bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Save All Changes
+      </button>
+
+      {/* CANCEL */}
+      <button
+        onClick={() => {
+          setBulkStops(
+            originalStopsBackup.map((s) => ({ ...s }))
+          );
+          setEditAllMode(false);
+        }}
+        className="bg-gray-300 px-4 py-2 rounded"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
+                <div className="bg-blue-50 p-4 rounded-lg mb-5 border border-blue-100">
                     <h5 className="text-sm font-medium text-blue-800 mb-2 flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
