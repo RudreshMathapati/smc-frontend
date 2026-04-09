@@ -580,14 +580,9 @@ const ManageRoutes = () => {
                 <input
                   value={stop.name}
                   onChange={(e) => {
-                    // const arr = [...bulkStops];
-                    // arr[index].name = e.target.value;
-                    // setBulkStops(arr);
-                    setBulkStops((prev) =>
-  prev.map((item, i) =>
-    i === index ? { ...item, name: e.target.value } : item
-  )
-);
+                    const arr = [...bulkStops];
+                    arr[index].name = e.target.value;
+                    setBulkStops(arr);
                   }}
                   className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                 />
