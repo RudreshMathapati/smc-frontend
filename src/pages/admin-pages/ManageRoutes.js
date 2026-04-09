@@ -773,15 +773,21 @@ const ManageRoutes = () => {
                       <div className="mt-4 flex gap-3">
                         <button
                           onClick={() => {
-                            const updatedTrips = [...form.trips];
-                            updatedTrips[currentTripIndex].stops =
-                              bulkStops.map((s, i) => ({
-                                ...s,
-                                sequence: i + 1,
-                              }));
-                            setForm({ ...form, trips: updatedTrips });
-                            setEditAllMode(false);
-                          }}
+  const updatedTrips = form.trips.map((trip, i) => {
+    if (i !== currentTripIndex) return trip;
+
+    return {
+      ...trip,
+      stops: bulkStops.map((s, idx) => ({
+        ...s,
+        sequence: idx + 1,
+      })),
+    };
+  });
+
+  setForm({ ...form, trips: updatedTrips });
+  setEditAllMode(false);
+}}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm"
                         >
                           Save All Changes
