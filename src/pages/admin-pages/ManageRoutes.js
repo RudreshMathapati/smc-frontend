@@ -544,7 +544,8 @@ const ManageRoutes = () => {
                     onClick={() => {
                       setBulkStops(
   form.trips[currentTripIndex].stops.map((stop) => ({ ...stop }))
-);
+     );
+     setEditAllMode(true); // ✅ ADD THIS
                     }}
                     className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
                   >
@@ -579,9 +580,14 @@ const ManageRoutes = () => {
                 <input
                   value={stop.name}
                   onChange={(e) => {
-                    const arr = [...bulkStops];
-                    arr[index].name = e.target.value;
-                    setBulkStops(arr);
+                    // const arr = [...bulkStops];
+                    // arr[index].name = e.target.value;
+                    // setBulkStops(arr);
+                    setBulkStops((prev) =>
+  prev.map((item, i) =>
+    i === index ? { ...item, name: e.target.value } : item
+  )
+);
                   }}
                   className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                 />
