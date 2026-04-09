@@ -723,9 +723,6 @@ setRoutes(cleanData);
                 <input
                   value={stop.name}
                   onChange={(e) => {
-                    console.log(
-  bulkStops[index] === form.trips[currentTripIndex].stops[index]
-);
                     setBulkStops((prev) =>
                       prev.map((s, i) =>
                         i === index
@@ -761,6 +758,9 @@ setRoutes(cleanData);
                   type="number"
                   value={stop.stage}
                   onChange={(e) => {
+                    console.log(
+  bulkStops[index] === form.trips[currentTripIndex].stops[index]
+);
                     setBulkStops((prev) =>
                       prev.map((s, i) =>
                         i === index
