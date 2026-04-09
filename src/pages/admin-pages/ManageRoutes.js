@@ -191,64 +191,64 @@ const ManageRoutes = () => {
   //   setInsertMessage("");
   // };
 
-const addStop = () => {
-  if (!newStop.name || !newStop.timingOffset || !newStop.stage) {
-    toast.error("Stop name, timing offset and stage are required");
-    return;
-  }
-
-  const updatedTrips = [...form.trips];
-
-  const currentTrip = updatedTrips[currentTripIndex];
-
-  let stops = [...currentTrip.stops]; // ✅ deep copy
-
-  const newStopData = {
-    name: newStop.name,
-    timingOffset: newStop.timingOffset,
-    latitude: newStop.latitude || "",
-    longitude: newStop.longitude || "",
-    stage: Number(newStop.stage),
-  };
-
-  if (insertIndex !== null) {
-    if (insertMode === "above") {
-      stops.splice(insertIndex, 0, newStopData);
-    } else if (insertMode === "below") {
-      stops.splice(insertIndex + 1, 0, newStopData);
+  const addStop = () => {
+    if (!newStop.name || !newStop.timingOffset || !newStop.stage) {
+      toast.error("Stop name, timing offset and stage are required");
+      return;
     }
-  } else {
-    stops.push(newStopData);
-  }
 
-  // Recalculate sequence
-  stops = stops.map((stop, idx) => ({
-    ...stop,
-    sequence: idx + 1,
-  }));
+    const updatedTrips = [...form.trips];
 
-  updatedTrips[currentTripIndex] = {
-    ...currentTrip,
-    stops,
+    const currentTrip = updatedTrips[currentTripIndex];
+
+    let stops = [...currentTrip.stops]; // ✅ deep copy
+
+    const newStopData = {
+      name: newStop.name,
+      timingOffset: newStop.timingOffset,
+      latitude: newStop.latitude || "",
+      longitude: newStop.longitude || "",
+      stage: Number(newStop.stage),
+    };
+
+    if (insertIndex !== null) {
+      if (insertMode === "above") {
+        stops.splice(insertIndex, 0, newStopData);
+      } else if (insertMode === "below") {
+        stops.splice(insertIndex + 1, 0, newStopData);
+      }
+    } else {
+      stops.push(newStopData);
+    }
+
+    // Recalculate sequence
+    stops = stops.map((stop, idx) => ({
+      ...stop,
+      sequence: idx + 1,
+    }));
+
+    updatedTrips[currentTripIndex] = {
+      ...currentTrip,
+      stops,
+    };
+
+    setForm({ ...form, trips: updatedTrips });
+
+    // Reset
+    setInsertIndex(null);
+    setInsertMode(null);
+
+    setNewStop({
+      name: "",
+      timingOffset: "",
+      latitude: "",
+      longitude: "",
+      stage: "",
+      sequence: 0,
+    });
+
+    setInsertMessage("");
   };
-
-  setForm({ ...form, trips: updatedTrips });
-
-  // Reset
-  setInsertIndex(null);
-  setInsertMode(null);
-
-  setNewStop({
-    name: "",
-    timingOffset: "",
-    latitude: "",
-    longitude: "",
-    stage: "",
-    sequence: 0,
-  });
-
-  setInsertMessage("");
-};
 
   // const removeStop = (stopIndex) => {
   //   const updatedTrips = [...form.trips];
@@ -261,29 +261,27 @@ const addStop = () => {
   //   ].stops.map((stop, idx) => ({ ...stop, sequence: idx + 1 }));
   //   setForm({ ...form, trips: updatedTrips });
   // };
-const removeStop = (stopIndex) => {
-  const updatedTrips = [...form.trips];
+  const removeStop = (stopIndex) => {
+    const updatedTrips = [...form.trips];
 
-  const currentTrip = updatedTrips[currentTripIndex];
+    const currentTrip = updatedTrips[currentTripIndex];
 
-  let stops = [...currentTrip.stops]; // ✅ copy
+    let stops = [...currentTrip.stops]; // ✅ copy
 
-  stops = stops.filter((_, i) => i !== stopIndex);
+    stops = stops.filter((_, i) => i !== stopIndex);
 
-  stops = stops.map((stop, idx) => ({
-    ...stop,
-    sequence: idx + 1,
-  }));
+    stops = stops.map((stop, idx) => ({
+      ...stop,
+      sequence: idx + 1,
+    }));
 
-  updatedTrips[currentTripIndex] = {
-    ...currentTrip,
-    stops,
+    updatedTrips[currentTripIndex] = {
+      ...currentTrip,
+      stops,
+    };
+
+    setForm({ ...form, trips: updatedTrips });
   };
-
-  setForm({ ...form, trips: updatedTrips });
-};
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -341,29 +339,33 @@ const removeStop = (stopIndex) => {
   //   window.scrollTo({ top: 0, behavior: "smooth" });
   // };
   const handleEdit = (route) => {
-  setEditingRouteId(route._id);
+    setEditingRouteId(route._id);
 
-  const deepTrips = JSON.parse(JSON.stringify(route.trips || [
-    {
-      sourceTime: "",
-      destinationTime: "",
-      stops: [],
-    },
-  ]));
+    const deepTrips = JSON.parse(
+      JSON.stringify(
+        route.trips || [
+          {
+            sourceTime: "",
+            destinationTime: "",
+            stops: [],
+          },
+        ],
+      ),
+    );
 
-  setForm({
-    source: route.source,
-    destination: route.destination,
-    via: route.via || "",
-    distance: route.distance || "",
-    estimatedDuration: route.estimatedDuration || "",
-    trips: deepTrips,
-  });
+    setForm({
+      source: route.source,
+      destination: route.destination,
+      via: route.via || "",
+      distance: route.distance || "",
+      estimatedDuration: route.estimatedDuration || "",
+      trips: deepTrips,
+    });
 
-  setCurrentTripIndex(0);
-  setShowForm(true);
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
+    setCurrentTripIndex(0);
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -648,135 +650,164 @@ const removeStop = (stopIndex) => {
                   <button
                     type="button"
                     onClick={() => {
-  const deepCopy = JSON.parse(JSON.stringify(form.trips[currentTripIndex].stops));
-  setBulkStops(deepCopy);
-  setEditAllMode(true);
-}}
+                      const deepCopy = JSON.parse(
+                        JSON.stringify(form.trips[currentTripIndex].stops),
+                      );
+                      setBulkStops(deepCopy);
+                      setEditAllMode(true);
+                    }}
                     className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
                   >
                     Edit All Stops
                   </button>
-                {editAllMode && (
-  <div className="bg-white p-4 rounded-lg mb-4 border border-gray-200 shadow-sm">
-    <h5 className="text-md font-semibold text-gray-800 mb-3">
-      Edit All Stops
-    </h5>
+                  {editAllMode && (
+                    <div className="bg-white p-4 rounded-lg mb-4 border border-gray-200 shadow-sm">
+                      <h5 className="text-md font-semibold text-gray-800 mb-3">
+                        Edit All Stops
+                      </h5>
 
-    <div className="overflow-x-auto">
-      <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="p-2 border">Seq</th>
-            <th className="p-2 border">Name</th>
-            <th className="p-2 border">Time</th>
-            <th className="p-2 border">Stage</th>
-            <th className="p-2 border">Lat</th>
-            <th className="p-2 border">Lng</th>
-          </tr>
-        </thead>
-        <tbody>
-          {bulkStops.map((stop, index) => (
-            <tr key={index} className="hover:bg-gray-50">
-              <td className="p-2 border text-center font-medium">
-                {index + 1}
-              </td>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                          <thead className="bg-gray-100">
+                            <tr>
+                              <th className="p-2 border">Seq</th>
+                              <th className="p-2 border">Name</th>
+                              <th className="p-2 border">Time</th>
+                              <th className="p-2 border">Stage</th>
+                              <th className="p-2 border">Lat</th>
+                              <th className="p-2 border">Lng</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {bulkStops.map((stop, index) => (
+                              <tr key={index} className="hover:bg-gray-50">
+                                <td className="p-2 border text-center font-medium">
+                                  {index + 1}
+                                </td>
 
-              <td className="p-2 border">
-                <input
-                  value={stop.name}
-                  onChange={(e) => {
-                    const arr = [...bulkStops];
-                    arr[index].name = e.target.value;
-                    setBulkStops(arr);
-                  }}
-                  className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                />
-              </td>
+                                <td className="p-2 border">
+                                  <input
+                                    value={stop.name}
+                                    onChange={(e) => {
+                                      const arr = bulkStops.map((stop, i) =>
+                                        i === index
+                                          ? { ...stop, name: e.target.value }
+                                          : stop,
+                                      );
+                                      setBulkStops(arr);
+                                    }}
+                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                  />
+                                </td>
 
-              <td className="p-2 border">
-                <input
-                  value={stop.timingOffset}
-                  onChange={(e) => {
-                    const arr = [...bulkStops];
-                    arr[index].timingOffset = e.target.value;
-                    setBulkStops(arr);
-                  }}
-                  className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                />
-              </td>
+                                <td className="p-2 border">
+                                  <input
+                                    value={stop.timingOffset}
+                                    onChange={(e) => {
+                                      const arr = bulkStops.map((stop, i) =>
+                                        i === index
+                                          ? {
+                                              ...stop,
+                                              timingOffset: e.target.value,
+                                            }
+                                          : stop,
+                                      );
+                                      setBulkStops(arr);
+                                    }}
+                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                  />
+                                </td>
 
-              <td className="p-2 border">
-                <input
-                  type="number"
-                  value={stop.stage}
-                  onChange={(e) => {
-                    const arr = [...bulkStops];
-                    arr[index].stage = e.target.value;
-                    setBulkStops(arr);
-                  }}
-                  className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                />
-              </td>
+                                <td className="p-2 border">
+                                  <input
+                                    type="number"
+                                    value={stop.stage}
+                                    onChange={(e) => {
+                                      const arr = bulkStops.map((stop, i) =>
+                                        i === index
+                                          ? { ...stop, stage: e.target.value }
+                                          : stop,
+                                      );
+                                      setBulkStops(arr);
+                                    }}
+                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                  />
+                                </td>
 
-              <td className="p-2 border">
-                <input
-                  value={stop.latitude}
-                  onChange={(e) => {
-                    const arr = [...bulkStops];
-                    arr[index].latitude = e.target.value;
-                    setBulkStops(arr);
-                  }}
-                  className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                />
-              </td>
+                                <td className="p-2 border">
+                                  <input
+                                    value={stop.latitude}
+                                    onChange={(e) => {
+                                      const arr = bulkStops.map((stop, i) =>
+                                        i === index
+                                          ? {
+                                              ...stop,
+                                              latitude: e.target.value,
+                                            }
+                                          : stop,
+                                      );
+                                      setBulkStops(arr);
+                                    }}
+                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                  />
+                                </td>
 
-              <td className="p-2 border">
-                <input
-                  value={stop.longitude}
-                  onChange={(e) => {
-                    const arr = [...bulkStops];
-                    arr[index].longitude = e.target.value;
-                    setBulkStops(arr);
-                  }}
-                  className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                                <td className="p-2 border">
+                                  <input
+                                    value={stop.longitude}
+                                    onChange={(e) => {
+                                      const arr = bulkStops.map((stop, i) =>
+                                        i === index
+                                          ? {
+                                              ...stop,
+                                              longitude: e.target.value,
+                                            }
+                                          : stop,
+                                      );
+                                      setBulkStops(arr);
+                                    }}
+                                    className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                  />
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
 
-    <div className="mt-4 flex gap-3">
-      <button
-        onClick={() => {
-          const updatedTrips = [...form.trips];
-          updatedTrips[currentTripIndex].stops = bulkStops.map((s, i) => ({
-            ...s,
-            sequence: i + 1,
-          }));
-          setForm({ ...form, trips: updatedTrips });
-          setEditAllMode(false);
-        }}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm"
-      >
-        Save All Changes
-      </button>
+                      <div className="mt-4 flex gap-3">
+                        <button
+                          onClick={() => {
+                            const updatedTrips = [...form.trips];
+                            updatedTrips[currentTripIndex].stops =
+                              bulkStops.map((s, i) => ({
+                                ...s,
+                                sequence: i + 1,
+                              }));
+                            setForm({ ...form, trips: updatedTrips });
+                            setEditAllMode(false);
+                          }}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm"
+                        >
+                          Save All Changes
+                        </button>
 
-      <button
-        onClick={() => {
-  // Original stops wapas laao
-  const originalStops = form.trips[currentTripIndex].stops.map(stop => ({...stop}));
-  setBulkStops(originalStops);
-  setEditAllMode(false);
-}}
-        className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm"
-      >
-        Cancel
-      </button>
-    </div>
-  </div>
-)}
+                        <button
+                          onClick={() => {
+                            // Original stops wapas laao
+                            const originalStops = form.trips[
+                              currentTripIndex
+                            ].stops.map((stop) => ({ ...stop }));
+                            setBulkStops(originalStops);
+                            setEditAllMode(false);
+                          }}
+                          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
                   <div className="bg-blue-50 p-4 rounded-lg mb-5 border border-blue-100">
                     <h5 className="text-sm font-medium text-blue-800 mb-2 flex items-center">
                       <svg
