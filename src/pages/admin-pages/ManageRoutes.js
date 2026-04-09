@@ -140,68 +140,150 @@ const ManageRoutes = () => {
     toast.success("Trip pasted successfully");
   };
 
-  const addStop = () => {
-    if (!newStop.name || !newStop.timingOffset || !newStop.stage) {
-      toast.error("Stop name, timing offset and stage are required");
-      return;
-    }
+  // const addStop = () => {
+  //   if (!newStop.name || !newStop.timingOffset || !newStop.stage) {
+  //     toast.error("Stop name, timing offset and stage are required");
+  //     return;
+  //   }
 
-    const updatedTrips = [...form.trips];
-    let stops = updatedTrips[currentTripIndex].stops;
+  //   const updatedTrips = [...form.trips];
+  //   let stops = updatedTrips[currentTripIndex].stops;
 
-    const newStopData = {
-      name: newStop.name,
-      timingOffset: newStop.timingOffset,
-      latitude: newStop.latitude || "",
-      longitude: newStop.longitude || "",
-      stage: Number(newStop.stage),
-    };
+  //   const newStopData = {
+  //     name: newStop.name,
+  //     timingOffset: newStop.timingOffset,
+  //     latitude: newStop.latitude || "",
+  //     longitude: newStop.longitude || "",
+  //     stage: Number(newStop.stage),
+  //   };
 
-    if (insertIndex !== null) {
-      if (insertMode === "above") {
-        stops.splice(insertIndex, 0, newStopData);
-      } else if (insertMode === "below") {
-        stops.splice(insertIndex + 1, 0, newStopData);
-      }
-    } else {
-      stops.push(newStopData);
-    }
+  //   if (insertIndex !== null) {
+  //     if (insertMode === "above") {
+  //       stops.splice(insertIndex, 0, newStopData);
+  //     } else if (insertMode === "below") {
+  //       stops.splice(insertIndex + 1, 0, newStopData);
+  //     }
+  //   } else {
+  //     stops.push(newStopData);
+  //   }
 
-    // Recalculate sequence
-    stops = stops.map((stop, idx) => ({
-      ...stop,
-      sequence: idx + 1,
-    }));
+  //   // Recalculate sequence
+  //   stops = stops.map((stop, idx) => ({
+  //     ...stop,
+  //     sequence: idx + 1,
+  //   }));
 
-    updatedTrips[currentTripIndex].stops = stops;
-    setForm({ ...form, trips: updatedTrips });
+  //   updatedTrips[currentTripIndex].stops = stops;
+  //   setForm({ ...form, trips: updatedTrips });
 
-    // Reset
-    setInsertIndex(null);
-    setInsertMode(null);
+  //   // Reset
+  //   setInsertIndex(null);
+  //   setInsertMode(null);
 
-    setNewStop({
-      name: "",
-      timingOffset: "",
-      latitude: "",
-      longitude: "",
-      stage: "",
-      sequence: 0,
-    });
-    setInsertMessage("");
+  //   setNewStop({
+  //     name: "",
+  //     timingOffset: "",
+  //     latitude: "",
+  //     longitude: "",
+  //     stage: "",
+  //     sequence: 0,
+  //   });
+  //   setInsertMessage("");
+  // };
+
+const addStop = () => {
+  if (!newStop.name || !newStop.timingOffset || !newStop.stage) {
+    toast.error("Stop name, timing offset and stage are required");
+    return;
+  }
+
+  const updatedTrips = [...form.trips];
+
+  const currentTrip = updatedTrips[currentTripIndex];
+
+  let stops = [...currentTrip.stops]; // ✅ deep copy
+
+  const newStopData = {
+    name: newStop.name,
+    timingOffset: newStop.timingOffset,
+    latitude: newStop.latitude || "",
+    longitude: newStop.longitude || "",
+    stage: Number(newStop.stage),
   };
 
-  const removeStop = (stopIndex) => {
-    const updatedTrips = [...form.trips];
-    updatedTrips[currentTripIndex].stops = updatedTrips[
-      currentTripIndex
-    ].stops.filter((_, i) => i !== stopIndex);
-    // Update sequence numbers
-    updatedTrips[currentTripIndex].stops = updatedTrips[
-      currentTripIndex
-    ].stops.map((stop, idx) => ({ ...stop, sequence: idx + 1 }));
-    setForm({ ...form, trips: updatedTrips });
+  if (insertIndex !== null) {
+    if (insertMode === "above") {
+      stops.splice(insertIndex, 0, newStopData);
+    } else if (insertMode === "below") {
+      stops.splice(insertIndex + 1, 0, newStopData);
+    }
+  } else {
+    stops.push(newStopData);
+  }
+
+  // Recalculate sequence
+  stops = stops.map((stop, idx) => ({
+    ...stop,
+    sequence: idx + 1,
+  }));
+
+  updatedTrips[currentTripIndex] = {
+    ...currentTrip,
+    stops,
   };
+
+  setForm({ ...form, trips: updatedTrips });
+
+  // Reset
+  setInsertIndex(null);
+  setInsertMode(null);
+
+  setNewStop({
+    name: "",
+    timingOffset: "",
+    latitude: "",
+    longitude: "",
+    stage: "",
+    sequence: 0,
+  });
+
+  setInsertMessage("");
+};
+
+  // const removeStop = (stopIndex) => {
+  //   const updatedTrips = [...form.trips];
+  //   updatedTrips[currentTripIndex].stops = updatedTrips[
+  //     currentTripIndex
+  //   ].stops.filter((_, i) => i !== stopIndex);
+  //   // Update sequence numbers
+  //   updatedTrips[currentTripIndex].stops = updatedTrips[
+  //     currentTripIndex
+  //   ].stops.map((stop, idx) => ({ ...stop, sequence: idx + 1 }));
+  //   setForm({ ...form, trips: updatedTrips });
+  // };
+const removeStop = (stopIndex) => {
+  const updatedTrips = [...form.trips];
+
+  const currentTrip = updatedTrips[currentTripIndex];
+
+  let stops = [...currentTrip.stops]; // ✅ copy
+
+  stops = stops.filter((_, i) => i !== stopIndex);
+
+  stops = stops.map((stop, idx) => ({
+    ...stop,
+    sequence: idx + 1,
+  }));
+
+  updatedTrips[currentTripIndex] = {
+    ...currentTrip,
+    stops,
+  };
+
+  setForm({ ...form, trips: updatedTrips });
+};
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -238,26 +320,50 @@ const ManageRoutes = () => {
     }
   };
 
+  // const handleEdit = (route) => {
+  //   setEditingRouteId(route._id);
+  //   setForm({
+  //     source: route.source,
+  //     destination: route.destination,
+  //     via: route.via || "",
+  //     distance: route.distance || "",
+  //     estimatedDuration: route.estimatedDuration || "",
+  //     trips: route.trips || [
+  //       {
+  //         sourceTime: "",
+  //         destinationTime: "",
+  //         stops: [],
+  //       },
+  //     ],
+  //   });
+  //   setCurrentTripIndex(0);
+  //   setShowForm(true);
+  //   window.scrollTo({ top: 0, behavior: "smooth" });
+  // };
   const handleEdit = (route) => {
-    setEditingRouteId(route._id);
-    setForm({
-      source: route.source,
-      destination: route.destination,
-      via: route.via || "",
-      distance: route.distance || "",
-      estimatedDuration: route.estimatedDuration || "",
-      trips: route.trips || [
-        {
-          sourceTime: "",
-          destinationTime: "",
-          stops: [],
-        },
-      ],
-    });
-    setCurrentTripIndex(0);
-    setShowForm(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  setEditingRouteId(route._id);
+
+  const deepTrips = JSON.parse(JSON.stringify(route.trips || [
+    {
+      sourceTime: "",
+      destinationTime: "",
+      stops: [],
+    },
+  ]));
+
+  setForm({
+    source: route.source,
+    destination: route.destination,
+    via: route.via || "",
+    distance: route.distance || "",
+    estimatedDuration: route.estimatedDuration || "",
+    trips: deepTrips,
+  });
+
+  setCurrentTripIndex(0);
+  setShowForm(true);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
 
   const handleDelete = async (id) => {
     try {
