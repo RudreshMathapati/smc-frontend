@@ -542,8 +542,9 @@ const ManageRoutes = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      setBulkStops([...form.trips[currentTripIndex].stops]);
-                      setEditAllMode(true);
+                      setBulkStops(
+  form.trips[currentTripIndex].stops.map((stop) => ({ ...stop }))
+);
                     }}
                     className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
                   >
