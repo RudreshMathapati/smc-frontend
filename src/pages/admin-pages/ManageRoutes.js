@@ -542,11 +542,10 @@ const ManageRoutes = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      setBulkStops(
-  form.trips[currentTripIndex].stops.map((stop) => ({ ...stop }))
-     );
-     setEditAllMode(true); // ✅ ADD THIS
-                    }}
+  const deepCopy = JSON.parse(JSON.stringify(form.trips[currentTripIndex].stops));
+  setBulkStops(deepCopy);
+  setEditAllMode(true);
+}}
                     className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
                   >
                     Edit All Stops
@@ -659,7 +658,12 @@ const ManageRoutes = () => {
       </button>
 
       <button
-        onClick={() => setEditAllMode(false)}
+        onClick={() => {
+  // Original stops wapas laao
+  const originalStops = form.trips[currentTripIndex].stops.map(stop => ({...stop}));
+  setBulkStops(originalStops);
+  setEditAllMode(false);
+}}
         className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm"
       >
         Cancel
