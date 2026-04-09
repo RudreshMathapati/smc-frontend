@@ -651,8 +651,15 @@ const ManageRoutes = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      const deepCopy = JSON.parse(
-                        JSON.stringify(form.trips[currentTripIndex].stops),
+                      const deepCopy = form.trips[currentTripIndex].stops.map(
+                        (stop) => ({
+                          name: stop.name || "",
+                          timingOffset: stop.timingOffset || "",
+                          latitude: stop.latitude || "",
+                          longitude: stop.longitude || "",
+                          stage: stop.stage || "",
+                          sequence: stop.sequence || 0,
+                        }),
                       );
                       setBulkStops(deepCopy);
                       setEditAllMode(true);
@@ -690,12 +697,20 @@ const ManageRoutes = () => {
                                   <input
                                     value={stop.name}
                                     onChange={(e) => {
-                                      const arr = bulkStops.map((stop, i) =>
-                                        i === index
-                                          ? { ...stop, name: e.target.value }
-                                          : stop,
-                                      );
-                                      setBulkStops(arr);
+                                      const updated = bulkStops.map((s, i) => {
+                                        if (i !== index) return s;
+
+                                        return {
+                                          name: e.target.value,
+                                          timingOffset: s.timingOffset,
+                                          latitude: s.latitude,
+                                          longitude: s.longitude,
+                                          stage: s.stage,
+                                          sequence: s.sequence,
+                                        };
+                                      });
+
+                                      setBulkStops(updated);
                                     }}
                                     className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                   />
@@ -705,15 +720,20 @@ const ManageRoutes = () => {
                                   <input
                                     value={stop.timingOffset}
                                     onChange={(e) => {
-                                      const arr = bulkStops.map((stop, i) =>
-                                        i === index
-                                          ? {
-                                              ...stop,
-                                              timingOffset: e.target.value,
-                                            }
-                                          : stop,
-                                      );
-                                      setBulkStops(arr);
+                                      const updated = bulkStops.map((s, i) => {
+                                        if (i !== index) return s;
+
+                                        return {
+                                          name: s.name,
+                                          timingOffset: e.target.value,
+                                          latitude: s.latitude,
+                                          longitude: s.longitude,
+                                          stage: s.stage,
+                                          sequence: s.sequence,
+                                        };
+                                      });
+
+                                      setBulkStops(updated);
                                     }}
                                     className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                   />
@@ -724,12 +744,20 @@ const ManageRoutes = () => {
                                     type="number"
                                     value={stop.stage}
                                     onChange={(e) => {
-                                      const arr = bulkStops.map((stop, i) =>
-                                        i === index
-                                          ? { ...stop, stage: e.target.value }
-                                          : stop,
-                                      );
-                                      setBulkStops(arr);
+                                      const updated = bulkStops.map((s, i) => {
+                                        if (i !== index) return s;
+
+                                        return {
+                                          name: s.name,
+                                          timingOffset: s.timingOffset,
+                                          latitude: s.latitude,
+                                          longitude: s.longitude,
+                                          stage: e.target.value,
+                                          sequence: s.sequence,
+                                        };
+                                      });
+
+                                      setBulkStops(updated);
                                     }}
                                     className="w-full p-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                   />
