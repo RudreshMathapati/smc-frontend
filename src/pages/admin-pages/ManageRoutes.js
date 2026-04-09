@@ -649,8 +649,7 @@ const ManageRoutes = () => {
                     </svg>
                     Stops for Trip {currentTripIndex + 1}
                   </h4>
-                  {
-                  /* Edit All Stops Button */}
+                  {/* Edit All Stops Button */}
 <button
   type="button"
   onClick={() => {
