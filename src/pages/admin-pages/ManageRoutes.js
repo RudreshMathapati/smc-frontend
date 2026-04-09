@@ -62,7 +62,15 @@ const ManageRoutes = () => {
     try {
       setLoading(true);
       const res = await axiosInstance.get("/api/routes");
-      setRoutes(res.data);
+      const cleanData = res.data.map(route => ({
+  ...route,
+  trips: route.trips.map(trip => ({
+    ...trip,
+    stops: trip.stops.map(stop => ({ ...stop }))
+  }))
+}));
+
+setRoutes(cleanData);
 
       // Fetch unique sources and destinations for suggestions
       const stopsRes = await axiosInstance.get("/api/routes");
@@ -715,6 +723,9 @@ const ManageRoutes = () => {
                 <input
                   value={stop.name}
                   onChange={(e) => {
+                    console.log(
+  bulkStops[index] === form.trips[currentTripIndex].stops[index]
+);
                     setBulkStops((prev) =>
                       prev.map((s, i) =>
                         i === index
