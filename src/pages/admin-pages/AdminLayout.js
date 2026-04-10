@@ -298,7 +298,7 @@ const navItems = [
     exact: true,
   },
   {
-  name: "Change Password",
+  label: "Change Password",
   path: "/admin/change-password",
 }
 ];
