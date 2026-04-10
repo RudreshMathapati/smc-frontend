@@ -297,6 +297,10 @@ const navItems = [
     icon: <FiMap className="text-lg" />,
     exact: true,
   },
+  {
+  name: "Change Password",
+  path: "/admin/change-password",
+}
 ];
 
 const AdminLayout = ({ children }) => {

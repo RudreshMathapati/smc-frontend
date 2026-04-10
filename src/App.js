@@ -45,6 +45,7 @@ import ConductorReport from "./pages/admin-pages/ConductorReport";
 //demo
 import FareCalculator from "./pages/FareCalculator";
 import ManageFareCharts from "./pages/admin-pages/ManageFareCharts.js";
+import ChangePassword from "./pages/admin-pages/ChangePassword.js";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ const App = () => {
             <Route path="/" element={<LanguageSelector />} />
 
             {/* Auth Routes */}
+            <Route path="/admin/change-password" element={<ChangePassword />} />
             <Route path="/login" element={<CommonLogin />} />
             <Route path="/register" element={<SignUp />} />
 
