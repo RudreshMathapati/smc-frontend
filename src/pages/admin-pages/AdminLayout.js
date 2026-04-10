@@ -300,7 +300,7 @@ const navItems = [
   },
   {
   label: "Settings",
-  icon: <FiUsers className="text-lg" />,
+  icon: <FiSettings className="text-lg" />,
   submenu: [
     {
       path: "/admin/change-password",
