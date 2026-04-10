@@ -305,6 +305,14 @@ const navItems = [
       path: "/admin/change-password",
       label: "Change Password",
     },
+    {
+      path: "/admin/change-password",
+      label: "Change Password",
+    },
+    {
+      path: "/admin/change-password",
+      label: "Change Password",
+    },
   ],
 }
 ];
