@@ -758,6 +758,7 @@ setRoutes(cleanData);
                   type="number"
                   value={stop.stage}
                   onChange={(e) => {
+                    console.log("ON CHANGE TRIGGERED"); // 👈 TEST
                     console.log(
   bulkStops[index] === form.trips[currentTripIndex].stops[index]
 );
