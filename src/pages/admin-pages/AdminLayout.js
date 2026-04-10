@@ -305,7 +305,6 @@ const navItems = [
     {
       path: "/admin/change-password",
       label: "Change Password",
-      icon: <FiSettings className="text-lg" />,
     },
   ],
 }
