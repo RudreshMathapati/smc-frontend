@@ -658,7 +658,7 @@ setRoutes(cleanData);
                     Stops for Trip {currentTripIndex + 1}
                   </h4>
                   {/* Edit All Stops Button */}
-<button
+{/* <button
   type="button"
   onClick={() => {
     const original = form.trips[currentTripIndex].stops;
@@ -689,7 +689,7 @@ setRoutes(cleanData);
   className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
 >
   Edit All Stops
-</button>
+</button> */}
 
 {/* Edit Table */}
 {editAllMode && (
