@@ -1033,9 +1033,9 @@ setRoutes(cleanData);
                     </div>
                     {form.trips[currentTripIndex].stops.length > 0 ? (
                       <ul className="divide-y divide-gray-200">
-                        {form.trips[currentTripIndex].stops
-                          .sort((a, b) => a.sequence - b.sequence)
-                          .map((stop, index) => (
+                        {[...form.trips[currentTripIndex].stops] // ✅ COPY FIRST
+  .sort((a, b) => a.sequence - b.sequence)
+  .map((stop, index) => (
                             <li
                               key={index}
                               className="py-3 flex justify-between items-center hover:bg-gray-100 px-2 rounded-lg transition-colors"
