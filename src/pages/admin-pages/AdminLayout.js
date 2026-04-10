@@ -298,8 +298,14 @@ const navItems = [
     exact: true,
   },
   {
-  label: "Change Password",
-  path: "/admin/change-password",
+  label: "Settings",
+  icon: <FiUsers className="text-lg" />,
+  submenu: [
+    {
+      path: "/admin/change-password",
+      label: "Change Password",
+    },
+  ],
 }
 ];
 
