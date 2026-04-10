@@ -214,6 +214,7 @@ import {
   FiUserCheck,
   FiChevronDown,
   FiChevronUp,
+  FiSettings,
 } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
@@ -304,7 +305,7 @@ const navItems = [
     {
       path: "/admin/change-password",
       label: "Change Password",
-      icon: <FileSystem className="text-lg" />,
+      icon: <FiSettings className="text-lg" />,
     },
   ],
 }
