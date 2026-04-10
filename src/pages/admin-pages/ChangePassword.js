@@ -26,7 +26,7 @@ const ChangePassword = () => {
 
       const userId = localStorage.getItem("userId"); // or from auth
 
-      await axiosInstance.put("/api/change-password", {
+      await axiosInstance.put("/api/auth/change-password", {
         userId,
         ...form,
       });
