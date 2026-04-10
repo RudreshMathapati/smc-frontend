@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+
+const socket = io("https://smc-backend-0tmb.onrender.com");
 import {
     GoogleMap,
     Marker,
