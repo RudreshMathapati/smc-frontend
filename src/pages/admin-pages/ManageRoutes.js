@@ -1584,13 +1584,13 @@ const ManageRoutes = () => {
             />
 
             {/* EDIT ALL */}
-            <button
+            {/* <button
               type="button"
               onClick={openEditAll}
               className="bg-blue-600 text-white px-3 py-1 rounded"
             >
               Edit All Stops
-            </button>
+            </button> */}
 
             {/* ================= TABLE ================= */}
             {editAllMode && (
