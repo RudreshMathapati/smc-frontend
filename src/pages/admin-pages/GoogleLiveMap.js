@@ -21,15 +21,10 @@ import {
 //     transports: ["websocket"],
 //     withCredentials: true,
 // });
-setInterval(() => {
 const socket = io(process.env.REACT_APP_API_URL, {
-  transports: ["websocket", "polling"], // 👈 IMPORTANT
+  transports: ["websocket", "polling"],
   withCredentials: true,
-  reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1000,
 });
-}, 2000);
 const containerStyle = {
     width: "100%",
     height: "100%",
