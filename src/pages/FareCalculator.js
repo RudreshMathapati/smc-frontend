@@ -9,7 +9,7 @@ const FareCalculator = () => {
   const [loading, setLoading] = useState(false);
 
   // ⚠️ Put your routeId
-  const routeId = "69bdc21a30c9d2d7663834c5";
+  const routeId = "68d79370e445440ae3fbcd4f";
 
   // ✅ Fetch stops from backend
   const fetchStops = async () => {
