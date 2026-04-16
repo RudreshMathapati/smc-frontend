@@ -68,6 +68,7 @@ const ManagePOSMachines = () => {
 
   const handleEdit = (machine) => {
     setForm({
+      name: machine.posName,
       deviceId: machine.deviceId,
       model: machine.model,
       vendor: machine.vendor,
