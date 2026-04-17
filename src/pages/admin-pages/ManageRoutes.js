@@ -312,6 +312,7 @@ const ManageRoutes = () => {
 
   const resetForm = () => {
     setForm({
+      routeId: "",
       source: "",
       destination: "",
       via: "",
