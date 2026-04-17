@@ -32,6 +32,7 @@ const ManageRoutes = () => {
   const [editAllMode, setEditAllMode] = useState(false);
   const [bulkStops, setBulkStops] = useState([]);
   const [form, setForm] = useState({
+    routeId: "",
     source: "",
     destination: "",
     via: "",
@@ -62,15 +63,15 @@ const ManageRoutes = () => {
     try {
       setLoading(true);
       const res = await axiosInstance.get("/api/routes");
-      const cleanData = res.data.map(route => ({
-  ...route,
-  trips: route.trips.map(trip => ({
-    ...trip,
-    stops: trip.stops.map(stop => ({ ...stop }))
-  }))
-}));
+      const cleanData = res.data.map((route) => ({
+        ...route,
+        trips: route.trips.map((trip) => ({
+          ...trip,
+          stops: trip.stops.map((stop) => ({ ...stop })),
+        })),
+      }));
 
-setRoutes(cleanData);
+      setRoutes(cleanData);
 
       // Fetch unique sources and destinations for suggestions
       const stopsRes = await axiosInstance.get("/api/routes");
@@ -282,6 +283,7 @@ setRoutes(cleanData);
     );
 
     setForm({
+      routeId: route.routeId || "", // ✅ ADD THIS
       source: route.source,
       destination: route.destination,
       via: route.via || "",
@@ -468,6 +470,20 @@ setRoutes(cleanData);
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Route ID *
+                  </label>
+                  <input
+                    type="text"
+                    name="routeId"
+                    value={form.routeId || ""}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    required
+                    placeholder="Enter route ID"
+                  />
+                </div>
               </div>
               <div className="pt-4 border-t border-gray-200">
                 <div className="flex justify-between items-center mb-3">
@@ -576,211 +592,219 @@ setRoutes(cleanData);
                     Stops for Trip {currentTripIndex + 1}
                   </h4>
                   {/* Edit All Stops Button */}
-<button
-  type="button"
-  onClick={() => {
-    const original = form.trips[currentTripIndex].stops;
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const original = form.trips[currentTripIndex].stops;
 
-    // ✅ FULLY ISOLATED COPY (NO REFERENCE)
-    const editable = original.map((s) => ({
-      name: s.name || "",
-      timingOffset: s.timingOffset || "",
-      latitude: s.latitude || "",
-      longitude: s.longitude || "",
-      stage: s.stage || "",
-      sequence: s.sequence || 0,
-    }));
+                      // ✅ FULLY ISOLATED COPY (NO REFERENCE)
+                      const editable = original.map((s) => ({
+                        name: s.name || "",
+                        timingOffset: s.timingOffset || "",
+                        latitude: s.latitude || "",
+                        longitude: s.longitude || "",
+                        stage: s.stage || "",
+                        sequence: s.sequence || 0,
+                      }));
 
-    const backup = original.map((s) => ({
-      name: s.name || "",
-      timingOffset: s.timingOffset || "",
-      latitude: s.latitude || "",
-      longitude: s.longitude || "",
-      stage: s.stage || "",
-      sequence: s.sequence || 0,
-    }));
+                      const backup = original.map((s) => ({
+                        name: s.name || "",
+                        timingOffset: s.timingOffset || "",
+                        latitude: s.latitude || "",
+                        longitude: s.longitude || "",
+                        stage: s.stage || "",
+                        sequence: s.sequence || 0,
+                      }));
 
-    setBulkStops(editable);
-    setOriginalStopsBackup(backup);
-    setEditAllMode(true);
-  }}
-  className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
->
-  Edit All Stops
-</button>
+                      setBulkStops(editable);
+                      setOriginalStopsBackup(backup);
+                      setEditAllMode(true);
+                    }}
+                    className="mb-3 bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded"
+                  >
+                    Edit All Stops
+                  </button>
 
-{/* Edit Table */}
-{editAllMode && (
-  <div className="bg-white p-4 rounded-lg mb-4 border border-gray-200 shadow-sm">
-    <h5 className="text-md font-semibold text-gray-800 mb-3">
-      Edit All Stops
-    </h5>
+                  {/* Edit Table */}
+                  {editAllMode && (
+                    <div className="bg-white p-4 rounded-lg mb-4 border border-gray-200 shadow-sm">
+                      <h5 className="text-md font-semibold text-gray-800 mb-3">
+                        Edit All Stops
+                      </h5>
 
-    <div className="overflow-x-auto">
-      <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="p-2 border">Seq</th>
-            <th className="p-2 border">Name</th>
-            <th className="p-2 border">Time</th>
-            <th className="p-2 border">Stage</th>
-            <th className="p-2 border">Lat</th>
-            <th className="p-2 border">Lng</th>
-          </tr>
-        </thead>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                          <thead className="bg-gray-100">
+                            <tr>
+                              <th className="p-2 border">Seq</th>
+                              <th className="p-2 border">Name</th>
+                              <th className="p-2 border">Time</th>
+                              <th className="p-2 border">Stage</th>
+                              <th className="p-2 border">Lat</th>
+                              <th className="p-2 border">Lng</th>
+                            </tr>
+                          </thead>
 
-        <tbody>
-          {bulkStops.map((stop, index) => (
-            <tr key={index}>
-              <td className="p-2 border text-center">
-                {index + 1}
-              </td>
+                          <tbody>
+                            {bulkStops.map((stop, index) => (
+                              <tr key={index}>
+                                <td className="p-2 border text-center">
+                                  {index + 1}
+                                </td>
 
-              {/* NAME */}
-              <td className="p-2 border">
-                <input
-                  value={stop.name}
-                  onChange={(e) => {
-                    setBulkStops((prev) =>
-                      prev.map((s, i) =>
-                        i === index
-                          ? { ...s, name: e.target.value }
-                          : s
-                      )
-                    );
-                  }}
-                  className="w-full p-1 border rounded"
-                />
-              </td>
+                                {/* NAME */}
+                                <td className="p-2 border">
+                                  <input
+                                    value={stop.name}
+                                    onChange={(e) => {
+                                      setBulkStops((prev) =>
+                                        prev.map((s, i) =>
+                                          i === index
+                                            ? { ...s, name: e.target.value }
+                                            : s,
+                                        ),
+                                      );
+                                    }}
+                                    className="w-full p-1 border rounded"
+                                  />
+                                </td>
 
-              {/* TIME */}
-              <td className="p-2 border">
-                <input
-                  value={stop.timingOffset}
-                  onChange={(e) => {
-                    setBulkStops((prev) =>
-                      prev.map((s, i) =>
-                        i === index
-                          ? { ...s, timingOffset: e.target.value }
-                          : s
-                      )
-                    );
-                  }}
-                  className="w-full p-1 border rounded"
-                />
-              </td>
+                                {/* TIME */}
+                                <td className="p-2 border">
+                                  <input
+                                    value={stop.timingOffset}
+                                    onChange={(e) => {
+                                      setBulkStops((prev) =>
+                                        prev.map((s, i) =>
+                                          i === index
+                                            ? {
+                                                ...s,
+                                                timingOffset: e.target.value,
+                                              }
+                                            : s,
+                                        ),
+                                      );
+                                    }}
+                                    className="w-full p-1 border rounded"
+                                  />
+                                </td>
 
-              {/* STAGE */}
-              <td className="p-2 border">
-                <input
-                  type="number"
-                  value={stop.stage}
-                  onChange={(e) => {
-                    console.log("ON CHANGE TRIGGERED"); // 👈 TEST
-                    console.log(
-  bulkStops[index] === form.trips[currentTripIndex].stops[index]
-);
-                    setBulkStops((prev) =>
-                      prev.map((s, i) =>
-                        i === index
-                          ? { ...s, stage: e.target.value }
-                          : s
-                      )
-                    );
-                  }}
-                  className="w-full p-1 border rounded"
-                />
-              </td>
+                                {/* STAGE */}
+                                <td className="p-2 border">
+                                  <input
+                                    type="number"
+                                    value={stop.stage}
+                                    onChange={(e) => {
+                                      console.log("ON CHANGE TRIGGERED"); // 👈 TEST
+                                      console.log(
+                                        bulkStops[index] ===
+                                          form.trips[currentTripIndex].stops[
+                                            index
+                                          ],
+                                      );
+                                      setBulkStops((prev) =>
+                                        prev.map((s, i) =>
+                                          i === index
+                                            ? { ...s, stage: e.target.value }
+                                            : s,
+                                        ),
+                                      );
+                                    }}
+                                    className="w-full p-1 border rounded"
+                                  />
+                                </td>
 
-              {/* LAT */}
-              <td className="p-2 border">
-                <input
-                  value={stop.latitude}
-                  onChange={(e) => {
-                    setBulkStops((prev) =>
-                      prev.map((s, i) =>
-                        i === index
-                          ? { ...s, latitude: e.target.value }
-                          : s
-                      )
-                    );
-                  }}
-                  className="w-full p-1 border rounded"
-                />
-              </td>
+                                {/* LAT */}
+                                <td className="p-2 border">
+                                  <input
+                                    value={stop.latitude}
+                                    onChange={(e) => {
+                                      setBulkStops((prev) =>
+                                        prev.map((s, i) =>
+                                          i === index
+                                            ? { ...s, latitude: e.target.value }
+                                            : s,
+                                        ),
+                                      );
+                                    }}
+                                    className="w-full p-1 border rounded"
+                                  />
+                                </td>
 
-              {/* LNG */}
-              <td className="p-2 border">
-                <input
-                  value={stop.longitude}
-                  onChange={(e) => {
-                    setBulkStops((prev) =>
-                      prev.map((s, i) =>
-                        i === index
-                          ? { ...s, longitude: e.target.value }
-                          : s
-                      )
-                    );
-                  }}
-                  className="w-full p-1 border rounded"
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                                {/* LNG */}
+                                <td className="p-2 border">
+                                  <input
+                                    value={stop.longitude}
+                                    onChange={(e) => {
+                                      setBulkStops((prev) =>
+                                        prev.map((s, i) =>
+                                          i === index
+                                            ? {
+                                                ...s,
+                                                longitude: e.target.value,
+                                              }
+                                            : s,
+                                        ),
+                                      );
+                                    }}
+                                    className="w-full p-1 border rounded"
+                                  />
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
 
-    {/* BUTTONS */}
-    <div className="mt-4 flex gap-3">
-      
-      {/* SAVE */}
-      <button
-        onClick={() => {
-          const updatedTrips = form.trips.map((trip, i) => {
-            if (i !== currentTripIndex) return trip;
+                      {/* BUTTONS */}
+                      <div className="mt-4 flex gap-3">
+                        {/* SAVE */}
+                        <button
+                          onClick={() => {
+                            const updatedTrips = form.trips.map((trip, i) => {
+                              if (i !== currentTripIndex) return trip;
 
-            return {
-              ...trip,
-              stops: bulkStops.map((s, idx) => ({
-                name: s.name,
-                timingOffset: s.timingOffset,
-                latitude: s.latitude,
-                longitude: s.longitude,
-                stage: Number(s.stage),
-                sequence: idx + 1,
-              })),
-            };
-          });
+                              return {
+                                ...trip,
+                                stops: bulkStops.map((s, idx) => ({
+                                  name: s.name,
+                                  timingOffset: s.timingOffset,
+                                  latitude: s.latitude,
+                                  longitude: s.longitude,
+                                  stage: Number(s.stage),
+                                  sequence: idx + 1,
+                                })),
+                              };
+                            });
 
-          setForm((prev) => ({
-            ...prev,
-            trips: updatedTrips,
-          }));
+                            setForm((prev) => ({
+                              ...prev,
+                              trips: updatedTrips,
+                            }));
 
-          setEditAllMode(false);
-        }}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Save All Changes
-      </button>
+                            setEditAllMode(false);
+                          }}
+                          className="bg-blue-600 text-white px-4 py-2 rounded"
+                        >
+                          Save All Changes
+                        </button>
 
-      {/* CANCEL */}
-      <button
-        onClick={() => {
-          setBulkStops(
-            originalStopsBackup.map((s) => ({ ...s }))
-          );
-          setEditAllMode(false);
-        }}
-        className="bg-gray-300 px-4 py-2 rounded"
-      >
-        Cancel
-      </button>
-    </div>
-  </div>
-)}
-                <div className="bg-blue-50 p-4 rounded-lg mb-5 border border-blue-100">
+                        {/* CANCEL */}
+                        <button
+                          onClick={() => {
+                            setBulkStops(
+                              originalStopsBackup.map((s) => ({ ...s })),
+                            );
+                            setEditAllMode(false);
+                          }}
+                          className="bg-gray-300 px-4 py-2 rounded"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <div className="bg-blue-50 p-4 rounded-lg mb-5 border border-blue-100">
                     <h5 className="text-sm font-medium text-blue-800 mb-2 flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -952,8 +976,8 @@ setRoutes(cleanData);
                     {form.trips[currentTripIndex].stops.length > 0 ? (
                       <ul className="divide-y divide-gray-200">
                         {[...form.trips[currentTripIndex].stops] // ✅ COPY FIRST
-  .sort((a, b) => a.sequence - b.sequence)
-  .map((stop, index) => (
+                          .sort((a, b) => a.sequence - b.sequence)
+                          .map((stop, index) => (
                             <li
                               key={index}
                               className="py-3 flex justify-between items-center hover:bg-gray-100 px-2 rounded-lg transition-colors"
