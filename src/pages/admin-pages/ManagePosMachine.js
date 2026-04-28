@@ -67,7 +67,7 @@ const ManagePOSMachines = () => {
   };
 
   const handleEdit = (machine) => {
-    const numericPart = machine.posName ? machine.posName.replace("SMT-ETM-", "") : "";
+    const numericPart = machine.posName ? machine.posName.replace("") : "";
     setForm({
       name: machine.posName,
       deviceId: machine.deviceId,
