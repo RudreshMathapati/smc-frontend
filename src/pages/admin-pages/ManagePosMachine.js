@@ -175,10 +175,7 @@ const ManagePOSMachines = () => {
     POS Name *
   </label>
   <div className="flex">
-    <span className="bg-gray-100 border border-r-0 px-3 py-2 rounded-l-md">
-      SMT-ETM-
-    </span>
-    <input
+      <input
       type="number"
       name="name"
       value={form.name}
