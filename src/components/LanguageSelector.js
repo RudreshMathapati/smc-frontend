@@ -47,9 +47,14 @@ const LanguageScreen = () => {
           {/* <h2 className="text-2xl font-bold text-gray-800">
             Choose Your Language
           </h2> */}
-          <p className="text-gray-500 text-sm mt-1">
-            Select your preferred language / तुमची पसंतीची भाषा निवडा
-          </p>
+          <div className="text-center">
+            <p className="text-gray-700 font-medium text-lg">
+              Select your preferred language
+            </p>
+            <p className="text-gray-500 text-sm mt-1">
+              तुमची पसंतीची भाषा निवडा
+            </p>
+          </div>
         </div>
 
         {/* Language Buttons */}
@@ -86,6 +91,9 @@ const LanguageScreen = () => {
             <FaGlobeAmericas className="mr-2 text-indigo-500" />
             <span>Solapur Public Transport System</span>
           </div>
+          <p className="text-xs text-gray-400 mt-2">
+            Powered by MIT Vishwaproyag University
+          </p>
         </div>
       </div>
     </div>
