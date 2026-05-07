@@ -20,11 +20,12 @@ export const fetchUser = createAsyncThunk(
 // Login
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async ({ phone, password }, thunkAPI) => {
+  async ({ username, password, rememberMe }, thunkAPI) => {
     try {
       const { data } = await axiosInstance.post("/api/auth/login", {
-        phone,
+        username,
         password,
+        rememberMe,
       });
       return data.user;
     } catch (err) {
@@ -34,6 +35,7 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
 
 // Update current user profile
 export const updateProfile = createAsyncThunk(

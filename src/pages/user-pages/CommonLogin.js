@@ -24,12 +24,12 @@ export default function CommonLogin() {
     const { user, loading, error } = useSelector((state) => state.auth);
 
     const [form, setForm] = useState({
-        phone: "",
+        username: "",
         password: "",
     });
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({
-        phone: "",
+        username: "",
         password: "",
     });
     const [rememberMe, setRememberMe] = useState(false);
@@ -57,11 +57,8 @@ export default function CommonLogin() {
         let valid = true;
         const newErrors = { phone: "", password: "" };
 
-        if (!form.phone.trim()) {
-            newErrors.phone = t("login.errors.phoneRequired");
-            valid = false;
-        } else if (!/^\d{10}$/.test(form.phone)) {
-            newErrors.phone = t("login.errors.phoneInvalid");
+        if (!form.username.trim()) {
+            newErrors.username = "Username is required";
             valid = false;
         }
 
@@ -96,7 +93,7 @@ export default function CommonLogin() {
         if (!validateForm()) return;
         dispatch(
             loginUser({
-                phone: form.phone,
+                username: form.username,
                 password: form.password,
                 rememberMe,
             }),
@@ -118,52 +115,51 @@ export default function CommonLogin() {
                         />
                     </div>
                     <h2 className="text-3xl font-bold text-gray-800">
-                        {t("login.title")}
+                        Admin Login
                     </h2>
-                    <p className="text-gray-500 mt-1">{t("login.subtitle")}</p>
+                    {/* <p className="text-gray-500 mt-1">{t("login.subtitle")}</p> */}
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-5">
                     <div className="space-y-1">
-                        <label
+                        {/* <label
                             htmlFor="phone"
                             className="block text-sm font-medium text-gray-700"
                         >
                             {t("login.phoneLabel")}
-                        </label>
+                        </label> */}
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <FaPhone className="text-gray-400" />
                             </div>
                             <input
                                 type="text"
-                                id="phone"
-                                name="phone"
-                                placeholder={t("login.phonePlaceholder")}
+                                id="username"
+                                name="username"
+                                placeholder="Username"
                                 className={`w-full pl-10 pr-4 py-3 rounded-lg border ${
-                                    errors.phone
+                                    errors.username
                                         ? "border-red-500"
                                         : "border-gray-300"
                                 } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
-                                value={form.phone}
+                                value={form.username}
                                 onChange={handleChange}
-                                maxLength="10"
                             />
                         </div>
-                        {errors.phone && (
+                        {errors.username && (
                             <p className="text-red-500 text-sm">
-                                {errors.phone}
+                                {errors.username}
                             </p>
                         )}
                     </div>
 
                     <div className="space-y-1">
-                        <label
+                        {/* <label
                             htmlFor="password"
                             className="block text-sm font-medium text-gray-700"
                         >
                             {t("login.passwordLabel")}
-                        </label>
+                        </label> */}
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <FaLock className="text-gray-400" />
@@ -172,7 +168,7 @@ export default function CommonLogin() {
                                 type={showPassword ? "text" : "password"}
                                 id="password"
                                 name="password"
-                                placeholder={t("login.passwordPlaceholder")}
+                                placeholder="Password"
                                 className={`w-full pl-10 pr-10 py-3 rounded-lg border ${
                                     errors.password
                                         ? "border-red-500"
@@ -212,12 +208,12 @@ export default function CommonLogin() {
                                 {t("login.rememberMe")}
                             </span>
                         </label>
-                        <Link
+                        {/* <Link
                             to="/forgot-password"
                             className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline"
                         >
                             {t("login.forgotPassword")}
-                        </Link>
+                        </Link> */}
                     </div>
 
                     <button
@@ -264,7 +260,7 @@ export default function CommonLogin() {
                     {/* Google sign-in removed */}
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-500">
+                {/* <div className="mt-6 text-center text-sm text-gray-500">
                     {t("login.noAccount")}{" "}
                     <Link
                         to="/register"
@@ -273,7 +269,7 @@ export default function CommonLogin() {
                         <FaUserPlus className="inline mr-1" />
                         {t("login.createOne")}
                     </Link>
-                </div>
+                </div> */}
             </div>
         </div>
     );
