@@ -24,18 +24,19 @@ const LanguageScreen = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="bg-white w-full max-w-md p-8 rounded-xl shadow-2xl transition-all duration-300 hover:shadow-3xl">
         {/* Logo Section */}
+        
         <div className="flex flex-col items-center mb-8">
           <div className="bg-white p-4 rounded-full mb-4">
             <img src={smtLogo} alt="N/A" height={180} width={180} />
             {/* <FaBus className="text-indigo-600 text-3xl" /> */}
           </div>
-          <h1 className="text-3xl font-bold text-gray-800">Track My Bus</h1>
-          <p className="text-gray-500 text-1xl">
+         {/* <h1 className="text-3xl font-bold text-gray-800">Track My Bus</h1> */}
+          {/* <p className="text-gray-500 text-1xl">
             Powered by
           </p>
           <p className="text-gray-500 mt-1">
             Solapur Municipal Corporation
-          </p>
+          </p> */}
         </div>
 
         {/* Language Selection */}
@@ -43,11 +44,11 @@ const LanguageScreen = () => {
           {/* <div className="bg-indigo-100 p-3 rounded-full mb-3">
             <HiOutlineTranslate className="text-indigo-600 text-2xl" />
           </div> */}
-          <h2 className="text-2xl font-bold text-gray-800">
+          {/* <h2 className="text-2xl font-bold text-gray-800">
             Choose Your Language
-          </h2>
+          </h2> */}
           <p className="text-gray-500 text-sm mt-1">
-            Select your preferred language
+            Select your preferred language / तुमची पसंतीची भाषा निवडा
           </p>
         </div>
 
