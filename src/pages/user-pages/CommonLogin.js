@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, fetchUser } from "../../slices/authSlice.js";
+import { loginUser, fetchUser, clearError } from "../../slices/authSlice.js";
 import { useTranslation } from "react-i18next";
 import {
     FaEye,
@@ -50,8 +50,9 @@ export default function CommonLogin() {
     useEffect(() => {
         if (error) {
             toast.error(error);
+            dispatch(clearError());
         }
-    }, [error]);
+    }, [error, dispatch]);
 
     const validateForm = () => {
         let valid = true;
