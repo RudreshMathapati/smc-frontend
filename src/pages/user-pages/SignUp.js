@@ -25,7 +25,7 @@ const SignUp = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [form, setForm] = useState({
-        name: "",
+        username: "",
         phone: "",
         password: "",
         confirm: "",
@@ -35,7 +35,7 @@ const SignUp = () => {
         setForm({ ...form, [e.target.name]: e.target.value });
 
     const isValid =
-        form.name &&
+        form.username &&
         /^[6-9]\d{9}$/.test(form.phone) &&
         form.password.length >= 6 &&
         form.password === form.confirm;
@@ -102,9 +102,9 @@ const SignUp = () => {
                             <FaUser className="text-gray-400" />
                         </div>
                         <input
-                            name="name"
-                            placeholder={t("signup.name_placeholder")}
-                            value={form.name}
+                            name="username"
+                            placeholder="Username"
+                            value={form.username}
                             onChange={handleChange}
                             className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                             required
