@@ -129,11 +129,8 @@ export default function CommonLogin() {
                         />
                     </div>
                     <h2 className="text-[28px] font-bold text-[#495057] tracking-tight">
-                        {isMarathi ? "बस ट्रॅक करा" : "Track My Bus"}
+                        {isMarathi ? "प्रशासक लॉगिन" : "Admin Login"}
                     </h2>
-                    <p className="text-[#6C757D] mt-2 text-center text-base leading-relaxed">
-                        {isMarathi ? "तुमची बस कधीही ट्रॅक करा!" : "Track your ride live, anytime!"}
-                    </p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-6">
