@@ -107,7 +107,7 @@ export default function CommonLogin() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa] p-4 relative overflow-hidden font-sans">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8f9fa] p-4 relative overflow-hidden font-sans">
             {/* Background decoration matching Language Screen */}
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#6C63FF] opacity-5 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#6C63FF] opacity-5 rounded-full blur-3xl"></div>
