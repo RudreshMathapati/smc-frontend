@@ -16,6 +16,10 @@ import {
 } from "react-icons/md";
 import smtLogo from "../../assets/images/smt-logo.png";
 
+// Enhanced constants matching the React Native code
+const BUILD_VERSION = "1.0.0";
+const BUILD_DATE = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
 export default function CommonLogin() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -235,7 +239,15 @@ export default function CommonLogin() {
                         )}
                     </button>
                 </form>
+            </div>
 
+            <div className="mt-8 flex flex-col items-center">
+                <p className="text-[13px] font-medium text-[#6C757D] opacity-80">
+                    App Version {BUILD_VERSION} (Build: {BUILD_DATE})
+                </p>
+                <p className="text-[13px] font-bold text-[#6C757D] mt-1">
+                    Powered by MIT Vishwaprayag University, Solapur
+                </p>
             </div>
         </div>
     );
