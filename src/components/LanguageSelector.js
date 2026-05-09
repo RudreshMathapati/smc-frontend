@@ -57,7 +57,7 @@ const LanguageSelector = ({ onContinue }) => {
         />
 
         <h1 className="text-2xl md:text-3xl font-bold text-[#212529] mb-2 text-center tracking-tight">
-          Track My Bus
+          Administrative Portal
         </h1>
         <p className="text-base text-[#6C757D] mb-8 text-center leading-relaxed whitespace-pre-line">
           Choose language to continue{"\n"}भाषा निवडा
