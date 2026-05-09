@@ -1,103 +1,118 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FaGlobeAmericas, FaArrowRight } from "react-icons/fa";
-// import { HiOutlineTranslate } from "react-icons/hi";
+import { MdLanguage } from "react-icons/md";
 import smtLogo from "../assets/images/smt-logo.png";
 
-const LanguageScreen = () => {
+// Enhanced constants matching the React Native code
+const BUILD_VERSION = "1.0.0";
+const BUILD_DATE = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+const LANGUAGES = [
+  { code: 'en', name: 'English', icon: 'language' },
+  { code: 'mr', name: 'मराठी', textIcon: 'म' },
+];
+
+const LanguageSelector = ({ onContinue }) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
+  const [loading, setLoading] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
 
-  const handleLanguageSelect = (lang) => {
-    i18n.changeLanguage(lang);
-    localStorage.setItem("selectedLanguage", lang);
-    navigate("/login");
+  const handleLanguageSelect = async (code) => {
+    setSelectedLanguage(code);
+    setLoading(true);
+
+    try {
+      // Simulate network delay for better UX (as in the RN code)
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      // Update i18n
+      await i18n.changeLanguage(code);
+      localStorage.setItem("i18nextLng", code);
+      localStorage.setItem("selectedLanguage", code);
+
+      if (onContinue) {
+        onContinue();
+      } else {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Failed to save language preference:", error);
+      setLoading(false);
+      setSelectedLanguage(null);
+    }
   };
 
-  const languages = [
-    { code: "en", name: "English", nativeName: "English" },
-    { code: "mr", name: "Marathi", nativeName: "मराठी" },
-  ];
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <div className="bg-white w-full max-w-md p-8 rounded-xl shadow-2xl transition-all duration-300 hover:shadow-3xl">
-        {/* Logo Section */}
-        
-        <div className="flex flex-col items-center mb-8">
-          <div className="bg-white p-4 rounded-full mb-4">
-            <img src={smtLogo} alt="N/A" height={180} width={180} />
-            {/* <FaBus className="text-indigo-600 text-3xl" /> */}
-          </div>
-         {/* <h1 className="text-3xl font-bold text-gray-800">Track My Bus</h1> */}
-          {/* <p className="text-gray-500 text-1xl">
-            Powered by
-          </p>
-          <p className="text-gray-500 mt-1">
-            Solapur Municipal Corporation
-          </p> */}
-        </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8F9FA] font-['Inter',sans-serif] p-4 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#0066CC] opacity-5 rounded-full blur-3xl"></div>
+      
+      <div className="w-full max-w-[420px] bg-white rounded-[24px] p-8 md:p-10 flex flex-col items-center shadow-[0_20px_40px_rgba(0,0,0,0.06)] border border-[#E9ECEF] relative z-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
+        <img
+          src={smtLogo}
+          alt="SMT Logo"
+          className="w-[140px] h-[140px] rounded-full object-contain mb-5 shadow-sm bg-white p-1"
+        />
 
-        {/* Language Selection */}
-        <div className="flex flex-col items-center mb-6">
-          {/* <div className="bg-indigo-100 p-3 rounded-full mb-3">
-            <HiOutlineTranslate className="text-indigo-600 text-2xl" />
-          </div> */}
-          {/* <h2 className="text-2xl font-bold text-gray-800">
-            Choose Your Language
-          </h2> */}
-          <div className="text-center">
-            <p className="text-gray-700 font-medium text-lg">
-              Select your preferred language
-            </p>
-            <p className="text-gray-500 text-sm mt-1">
-              तुमची पसंतीची भाषा निवडा
-            </p>
-          </div>
-        </div>
+        <h1 className="text-2xl md:text-3xl font-bold text-[#212529] mb-2 text-center tracking-tight">
+          Track My Bus
+        </h1>
+        <p className="text-base text-[#6C757D] mb-8 text-center leading-relaxed whitespace-pre-line">
+          Choose language to continue{"\n"}भाषा निवडा
+        </p>
 
-        {/* Language Buttons */}
-        <div className="space-y-4 mb-6">
-          {languages.map((lang) => (
+        <div className="w-full space-y-4">
+          {LANGUAGES.map((lang) => (
             <button
               key={lang.code}
+              disabled={loading}
               onClick={() => handleLanguageSelect(lang.code)}
-              className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-between ${
-                i18n.language === lang.code
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-800"
-              }`}
+              className={`w-full py-4 px-6 rounded-xl flex items-center justify-center text-lg font-semibold border-2 transition-all duration-300 relative overflow-hidden group ${
+                selectedLanguage === lang.code
+                  ? "bg-[#0066CC] border-[#0066CC] text-white shadow-lg shadow-blue-200 scale-[0.98]"
+                  : "bg-white border-[#0066CC] text-[#0066CC] hover:bg-blue-50 hover:border-[#0052A3] active:scale-95"
+              } disabled:opacity-70 disabled:cursor-not-allowed`}
             >
-              <div className="flex items-center">
-                <span className="mr-2 text-lg">
-                  {lang.code === "en" ? "🇬🇧" : "🇮🇳"}
-                </span>
-                <span>{lang.name}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="text-sm mr-2 opacity-80">
-                  {lang.nativeName}
-                </span>
-                <FaArrowRight className="text-sm" />
-              </div>
+              {loading && selectedLanguage === lang.code ? (
+                <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <div className="flex items-center">
+                  {lang.textIcon ? (
+                    <span className={`text-2xl font-bold mr-3 ${selectedLanguage === lang.code ? 'text-white' : 'text-[#0066CC]'}`}>
+                      {lang.textIcon}
+                    </span>
+                  ) : (
+                    <MdLanguage size={24} className={`mr-3 ${selectedLanguage === lang.code ? 'text-white' : 'text-[#0066CC]'}`} />
+                  )}
+                  {lang.name}
+                </div>
+              )}
             </button>
           ))}
         </div>
 
-        {/* Footer */}
-        <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-          <div className="flex items-center justify-center text-gray-500 text-sm">
-            <FaGlobeAmericas className="mr-2 text-indigo-500" />
-            <span>Solapur Public Transport System</span>
+        {loading && (
+          <div className="flex items-center mt-6 animate-pulse">
+            <div className="w-4 h-4 border-2 border-[#0066CC]/30 border-t-[#0066CC] rounded-full animate-spin"></div>
+            <span className="ml-3 text-sm font-medium text-[#6C757D]">
+              Setting up your experience...
+            </span>
           </div>
-          <p className="text-xs text-gray-400 mt-2">
-            Powered by MIT Vishwaproyag University
-          </p>
-        </div>
+        )}
+      </div>
+
+      <div className="mt-8 flex flex-col items-center">
+        <p className="text-[13px] font-medium text-[#6C757D] opacity-80">
+          App Version {BUILD_VERSION} (Build: {BUILD_DATE})
+        </p>
+        <p className="text-[13px] font-bold text-[#6C757D] mt-1">
+          Powered by MIT Vishwaprayag University, Solapur
+        </p>
       </div>
     </div>
   );
 };
 
-export default LanguageScreen;
+export default LanguageSelector;
