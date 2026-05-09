@@ -214,12 +214,6 @@ export default function CommonLogin() {
                                 {t("login.rememberMe")}
                             </span>
                         </label>
-                        <Link
-                            to="/forgot-password"
-                            className="text-[#6C63FF] font-medium hover:underline transition-all"
-                        >
-                            {isMarathi ? "पासवर्ड विसरलात?" : "Forgot password?"}
-                        </Link>
                     </div>
 
                     <button
@@ -245,17 +239,6 @@ export default function CommonLogin() {
                     </button>
                 </form>
 
-                <div className="mt-8 text-center">
-                    <p className="text-sm text-[#6C757D]">
-                        {isMarathi ? "खाते नाहीये?" : "Don't have an account?"}{" "}
-                        <Link
-                            to="/register"
-                            className="text-[#6C63FF] font-bold hover:underline transition-all"
-                        >
-                            {isMarathi ? "खाते तयार करा" : "Create one"}
-                        </Link>
-                    </p>
-                </div>
             </div>
         </div>
     );
