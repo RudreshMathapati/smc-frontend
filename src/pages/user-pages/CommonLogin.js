@@ -237,6 +237,7 @@ export default function CommonLogin() {
                                 {t("login.loading")}
                             </div>
                         ) : (
+                            <div className="flex items-center justify-center">
                                 <MdLogin className="mr-2" />
                                 {isMarathi ? "साइन इन करा" : "Sign In"}
                             </div>
