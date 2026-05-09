@@ -53,7 +53,7 @@ const LanguageSelector = ({ onContinue }) => {
         <img
           src={smtLogo}
           alt="SMT Logo"
-          className="w-[140px] h-[140px] rounded-full object-contain mb-5 shadow-sm bg-white p-1"
+          className="w-[150px] h-[150px] object-contain mb-5"
         />
 
         <h1 className="text-2xl md:text-3xl font-bold text-[#212529] mb-2 text-center tracking-tight">

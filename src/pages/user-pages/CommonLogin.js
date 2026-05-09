@@ -125,7 +125,7 @@ export default function CommonLogin() {
                         <img
                             src={smtLogo}
                             alt="Logo"
-                            className="w-[140px] h-[140px] object-contain"
+                            className="w-[150px] h-[150px] object-contain"
                         />
                     </div>
                     <h2 className="text-[28px] font-bold text-[#495057] tracking-tight">
