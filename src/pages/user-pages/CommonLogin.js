@@ -3,23 +3,24 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, fetchUser, clearError } from "../../slices/authSlice.js";
+import { loginUser, clearError } from "../../slices/authSlice.js";
 import { useTranslation } from "react-i18next";
 import {
-    FaEye,
-    FaEyeSlash,
-    FaPhone,
-    FaLock,
-    FaSignInAlt,
-    FaUserPlus,
-} from "react-icons/fa";
+    MdPhone,
+    MdLock,
+    MdVisibility,
+    MdVisibilityOff,
+    MdArrowBack,
+    MdPerson,
+    MdLogin,
+} from "react-icons/md";
 import smtLogo from "../../assets/images/smt-logo.png";
-// Firebase removed: Google sign-in disabled
 
 export default function CommonLogin() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const isMarathi = i18n.language === 'mr';
 
     const { user, loading, error } = useSelector((state) => state.auth);
 
@@ -56,10 +57,10 @@ export default function CommonLogin() {
 
     const validateForm = () => {
         let valid = true;
-        const newErrors = { phone: "", password: "" };
+        const newErrors = { username: "", password: "" };
 
         if (!form.username.trim()) {
-            newErrors.username = "Username is required";
+            newErrors.username = isMarathi ? "वापरकर्तानाव आवश्यक आहे" : "Username is required";
             valid = false;
         }
 
@@ -101,176 +102,159 @@ export default function CommonLogin() {
         );
     };
 
-    // Google sign-in removed
-
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-            <div className="bg-white w-full max-w-md p-8 rounded-xl shadow-2xl transition-all duration-300 hover:shadow-3xl">
+        <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa] p-4 relative overflow-hidden font-sans">
+            {/* Background decoration matching Language Screen */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#6C63FF] opacity-5 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#6C63FF] opacity-5 rounded-full blur-3xl"></div>
+
+            <div className="bg-white w-full max-w-[450px] p-8 md:p-10 rounded-[20px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-[#e9ecef] relative z-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
+                {/* Header with Back Button */}
+                <div className="mb-6">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="flex items-center text-[#6C63FF] font-semibold hover:opacity-80 transition-opacity"
+                    >
+                        <MdArrowBack size={24} className="mr-1" />
+                        <span>{isMarathi ? "मागे" : "Back"}</span>
+                    </button>
+                </div>
+
                 <div className="flex flex-col items-center mb-8">
-                    <div className="bg-white p-4 rounded-full mb-4">
+                    <div className="mb-4">
                         <img
                             src={smtLogo}
                             alt="Logo"
-                            height={180}
-                            width={180}
+                            className="w-[140px] h-[140px] object-contain"
                         />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800">
-                        Admin Login
+                    <h2 className="text-[28px] font-bold text-[#495057] tracking-tight">
+                        {isMarathi ? "बस ट्रॅक करा" : "Track My Bus"}
                     </h2>
-                    {/* <p className="text-gray-500 mt-1">{t("login.subtitle")}</p> */}
+                    <p className="text-[#6C757D] mt-2 text-center text-base leading-relaxed">
+                        {isMarathi ? "तुमची बस कधीही ट्रॅक करा!" : "Track your ride live, anytime!"}
+                    </p>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-5">
+                <form onSubmit={handleLogin} className="space-y-6">
+                    {/* Username Input */}
                     <div className="space-y-1">
-                        {/* <label
-                            htmlFor="phone"
-                            className="block text-sm font-medium text-gray-700"
-                        >
-                            {t("login.phoneLabel")}
-                        </label> */}
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <FaPhone className="text-gray-400" />
+                        <div className="relative group">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-[#6C63FF]">
+                                <MdPerson className="text-[#adb5bd]" size={20} />
                             </div>
                             <input
                                 type="text"
                                 id="username"
                                 name="username"
-                                placeholder="Username"
-                                className={`w-full pl-10 pr-4 py-3 rounded-lg border ${
+                                placeholder={isMarathi ? "वापरकर्तानाव" : "Username"}
+                                className={`w-full pl-11 pr-4 py-3.5 rounded-xl border bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/20 focus:bg-white ${
                                     errors.username
                                         ? "border-red-500"
-                                        : "border-gray-300"
-                                } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+                                        : "border-[#e9ecef] focus:border-[#6C63FF]"
+                                }`}
                                 value={form.username}
                                 onChange={handleChange}
                             />
                         </div>
                         {errors.username && (
-                            <p className="text-red-500 text-sm">
+                            <p className="text-red-500 text-sm ml-1">
                                 {errors.username}
                             </p>
                         )}
                     </div>
 
+                    {/* Password Input */}
                     <div className="space-y-1">
-                        {/* <label
-                            htmlFor="password"
-                            className="block text-sm font-medium text-gray-700"
-                        >
-                            {t("login.passwordLabel")}
-                        </label> */}
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <FaLock className="text-gray-400" />
+                        <div className="relative group">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-[#6C63FF]">
+                                <MdLock className="text-[#adb5bd]" size={20} />
                             </div>
                             <input
                                 type={showPassword ? "text" : "password"}
                                 id="password"
                                 name="password"
-                                placeholder="Password"
-                                className={`w-full pl-10 pr-10 py-3 rounded-lg border ${
+                                placeholder={isMarathi ? "पासवर्ड" : "Password"}
+                                className={`w-full pl-11 pr-12 py-3.5 rounded-xl border bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/20 focus:bg-white ${
                                     errors.password
                                         ? "border-red-500"
-                                        : "border-gray-300"
-                                } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+                                        : "border-[#e9ecef] focus:border-[#6C63FF]"
+                                }`}
                                 value={form.password}
                                 onChange={handleChange}
                             />
                             <button
                                 type="button"
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#adb5bd] hover:text-[#6C63FF] transition-colors"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
                                 {showPassword ? (
-                                    <FaEyeSlash className="text-gray-400 hover:text-gray-600" />
+                                    <MdVisibilityOff size={20} />
                                 ) : (
-                                    <FaEye className="text-gray-400 hover:text-gray-600" />
+                                    <MdVisibility size={20} />
                                 )}
                             </button>
                         </div>
                         {errors.password && (
-                            <p className="text-red-500 text-sm">
+                            <p className="text-red-500 text-sm ml-1">
                                 {errors.password}
                             </p>
                         )}
                     </div>
 
-                    <div className="flex justify-between items-center">
-                        <label className="inline-flex items-center">
+                    <div className="flex justify-between items-center text-sm">
+                        <label className="inline-flex items-center cursor-pointer group">
                             <input
                                 type="checkbox"
                                 checked={rememberMe}
                                 onChange={() => setRememberMe(!rememberMe)}
-                                className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out rounded"
+                                className="form-checkbox h-4 w-4 text-[#6C63FF] transition duration-150 ease-in-out rounded border-[#e9ecef] focus:ring-[#6C63FF]/20"
                             />
-                            <span className="ml-2 text-sm text-gray-600">
+                            <span className="ml-2 text-[#6C757D] group-hover:text-[#495057] transition-colors">
                                 {t("login.rememberMe")}
                             </span>
                         </label>
-                        {/* <Link
+                        <Link
                             to="/forgot-password"
-                            className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline"
+                            className="text-[#6C63FF] font-medium hover:underline transition-all"
                         >
-                            {t("login.forgotPassword")}
-                        </Link> */}
+                            {isMarathi ? "पासवर्ड विसरलात?" : "Forgot password?"}
+                        </Link>
                     </div>
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full py-3 rounded-lg font-semibold text-white transition-all duration-200 flex items-center justify-center ${
+                        className={`w-full py-4 rounded-xl font-bold text-white transition-all duration-300 shadow-[0_4px_12px_rgba(108,99,255,0.2)] active:scale-[0.98] ${
                             loading
-                                ? "bg-indigo-400 cursor-not-allowed"
-                                : "bg-indigo-600 hover:bg-indigo-700"
+                                ? "bg-[#6C63FF]/70 cursor-not-allowed"
+                                : "bg-[#6C63FF] hover:bg-[#5a52d5] hover:shadow-[0_6px_20px_rgba(108,99,255,0.3)]"
                         }`}
                     >
                         {loading ? (
-                            <>
-                                <svg
-                                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <circle
-                                        className="opacity-25"
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        strokeWidth="4"
-                                    ></circle>
-                                    <path
-                                        className="opacity-75"
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                </svg>
+                            <div className="flex items-center justify-center">
+                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
                                 {t("login.loading")}
-                            </>
+                            </div>
                         ) : (
-                            <>
-                                <FaSignInAlt className="mr-2" />
-                                {t("login.button")}
-                            </>
+                                <MdLogin className="mr-2" />
+                                {isMarathi ? "साइन इन करा" : "Sign In"}
+                            </div>
                         )}
                     </button>
-
-                    {/* Google sign-in removed */}
                 </form>
 
-                {/* <div className="mt-6 text-center text-sm text-gray-500">
-                    {t("login.noAccount")}{" "}
-                    <Link
-                        to="/register"
-                        className="text-indigo-600 hover:text-indigo-800 font-medium underline hover:no-underline"
-                    >
-                        <FaUserPlus className="inline mr-1" />
-                        {t("login.createOne")}
-                    </Link>
-                </div> */}
+                <div className="mt-8 text-center">
+                    <p className="text-sm text-[#6C757D]">
+                        {isMarathi ? "खाते नाहीये?" : "Don't have an account?"}{" "}
+                        <Link
+                            to="/register"
+                            className="text-[#6C63FF] font-bold hover:underline transition-all"
+                        >
+                            {isMarathi ? "खाते तयार करा" : "Create one"}
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );
