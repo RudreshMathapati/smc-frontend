@@ -166,7 +166,7 @@ const AdminLayout = ({ children }) => {
                 <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
                 Logged in as{" "}
                 <span className="text-blue-400 ml-1">
-                  {user.name || user.phone || "Admin"}
+                  {"Admin"}
                 </span>
               </p>
               <p className="text-[11px] mt-1.5 text-gray-500 font-semibold tracking-wider uppercase flex items-center">
