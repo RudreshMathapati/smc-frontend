@@ -169,9 +169,11 @@ const AdminLayout = ({ children }) => {
                   {"Admin"}
                 </span>
               </p>
-              <p className="text-[11px] mt-1.5 text-gray-500 font-semibold tracking-wider uppercase flex items-center">
-                <span className="mr-1.5 opacity-50">Today:</span>
-                {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+              <p className="text-xs mt-2 text-gray-300 font-medium tracking-wide flex items-center">
+                <span className="mr-2 opacity-60">Today:</span>
+                <span className="text-blue-300/90 font-semibold">
+                  {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </span>
               </p>
             </div>
           )}
