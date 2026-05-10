@@ -161,12 +161,19 @@ const AdminLayout = ({ children }) => {
             <h2 className="text-xl font-bold tracking-tight">Admin Panel</h2>
           </div>
           {user && (
-            <p className="text-sm mt-3 text-gray-400 font-medium">
-              Welcome back,{" "}
-              <span className="text-blue-400">
-                {user.name || user.phone || "Admin"}
-              </span>
-            </p>
+            <div className="mt-3">
+              <p className="text-sm text-gray-400 font-medium flex items-center">
+                <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                Logged in as{" "}
+                <span className="text-blue-400 ml-1">
+                  {user.name || user.phone || "Admin"}
+                </span>
+              </p>
+              <p className="text-[11px] mt-1.5 text-gray-500 font-semibold tracking-wider uppercase flex items-center">
+                <span className="mr-1.5 opacity-50">Today:</span>
+                {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </p>
+            </div>
           )}
         </div>
 
