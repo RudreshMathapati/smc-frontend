@@ -355,6 +355,8 @@ import {
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { io } from "socket.io-client";
+import axiosInstance from "../../utils/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 let socket;
 
@@ -369,6 +371,7 @@ ChartJS.register(
 );
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
@@ -416,6 +419,28 @@ const AdminDashboard = () => {
       setRefreshing(false);
       setLastUpdated(new Date());
     });
+
+    socket.on("dashboard:error", (err) => {
+      console.error("❌ Socket Error:", err);
+      toast.error(err.message || "Real-time update failed");
+    });
+
+    // Initial fetch to avoid 10s delay
+    const fetchInitialData = async () => {
+      try {
+        const response = await axiosInstance.get("/api/dashboard/analytics");
+        const data = response.data;
+        setFleetStatus(data.fleet);
+        setRevenueStats(data.revenue);
+        setStats(data.stats);
+        setLoading(false);
+      } catch (err) {
+        console.error("❌ Initial Fetch Error:", err);
+        // Don't toast here as socket might eventually pick up
+      }
+    };
+
+    fetchInitialData();
 
     return () => socket.disconnect();
   }, []);
