@@ -16,17 +16,12 @@ const LANGUAGES = [
 const LanguageSelector = ({ onContinue }) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
-  const [loading, setLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
 
   const handleLanguageSelect = async (code) => {
     setSelectedLanguage(code);
-    setLoading(true);
 
     try {
-      // Simulate network delay for better UX (as in the RN code)
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
       // Update i18n
       await i18n.changeLanguage(code);
       localStorage.setItem("i18nextLng", code);
@@ -39,7 +34,6 @@ const LanguageSelector = ({ onContinue }) => {
       }
     } catch (error) {
       console.error("Failed to save language preference:", error);
-      setLoading(false);
       setSelectedLanguage(null);
     }
   };
@@ -67,7 +61,7 @@ const LanguageSelector = ({ onContinue }) => {
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}
-              disabled={loading}
+              disabled={selectedLanguage !== null}
               onClick={() => handleLanguageSelect(lang.code)}
               className={`w-full py-4 px-6 rounded-xl flex items-center justify-center text-lg font-semibold border-2 transition-all duration-300 relative overflow-hidden group ${
                 selectedLanguage === lang.code
@@ -75,32 +69,20 @@ const LanguageSelector = ({ onContinue }) => {
                   : "bg-white border-[#0066CC] text-[#0066CC] hover:bg-blue-50 hover:border-[#0052A3] active:scale-95"
               } disabled:opacity-70 disabled:cursor-not-allowed`}
             >
-              {loading && selectedLanguage === lang.code ? (
-                <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                <div className="flex items-center">
-                  {lang.textIcon ? (
-                    <span className={`text-2xl font-bold mr-3 ${selectedLanguage === lang.code ? 'text-white' : 'text-[#0066CC]'}`}>
-                      {lang.textIcon}
-                    </span>
-                  ) : (
-                    <MdLanguage size={24} className={`mr-3 ${selectedLanguage === lang.code ? 'text-white' : 'text-[#0066CC]'}`} />
-                  )}
-                  {lang.name}
-                </div>
-              )}
+              <div className="flex items-center">
+                {lang.textIcon ? (
+                  <span className={`text-2xl font-bold mr-3 ${selectedLanguage === lang.code ? 'text-white' : 'text-[#0066CC]'}`}>
+                    {lang.textIcon}
+                  </span>
+                ) : (
+                  <MdLanguage size={24} className={`mr-3 ${selectedLanguage === lang.code ? 'text-white' : 'text-[#0066CC]'}`} />
+                )}
+                {lang.name}
+              </div>
             </button>
           ))}
         </div>
 
-        {loading && (
-          <div className="flex items-center mt-6 animate-pulse">
-            <div className="w-4 h-4 border-2 border-[#0066CC]/30 border-t-[#0066CC] rounded-full animate-spin"></div>
-            <span className="ml-3 text-sm font-medium text-[#6C757D]">
-              Setting up your experience...
-            </span>
-          </div>
-        )}
       </div>
 
       <div className="mt-8 flex flex-col items-center">
