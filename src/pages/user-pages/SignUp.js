@@ -77,8 +77,12 @@ const SignUp = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-md p-8 rounded-xl shadow-2xl transition-all duration-300 hover:shadow-3xl">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8f9fa] p-4 relative overflow-hidden font-sans">
+            {/* Background decoration matching Language Screen */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#0066CC] opacity-5 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#0066CC] opacity-5 rounded-full blur-3xl"></div>
+
+            <div className="bg-white w-full max-w-[420px] p-8 md:p-10 rounded-[24px] shadow-[0_20px_40px_rgba(0,0,0,0.06)] border border-[#e9ecef] relative z-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
                 <div className="flex flex-col items-center mb-6">
                     <div className="bg-white p-4 rounded-full mb-4">
                         <img
@@ -106,7 +110,7 @@ const SignUp = () => {
                             placeholder="Username"
                             value={form.username}
                             onChange={handleChange}
-                            className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-[#e9ecef] bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0066CC]/20 focus:bg-white focus:border-[#0066CC]"
                             required
                         />
                     </div>
@@ -120,7 +124,7 @@ const SignUp = () => {
                             placeholder={t("signup.phone_placeholder")}
                             value={form.phone}
                             onChange={handleChange}
-                            className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-[#e9ecef] bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0066CC]/20 focus:bg-white focus:border-[#0066CC]"
                             required
                         />
                     </div>
@@ -135,12 +139,12 @@ const SignUp = () => {
                             placeholder={t("signup.password_placeholder")}
                             value={form.password}
                             onChange={handleChange}
-                            className="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            className="w-full pl-10 pr-10 py-3.5 rounded-xl border border-[#e9ecef] bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0066CC]/20 focus:bg-white focus:border-[#0066CC]"
                             required
                         />
                         <button
                             type="button"
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#0066CC] transition-colors"
                             onClick={() => setShowPassword(!showPassword)}
                         >
                             {showPassword ? (
@@ -163,12 +167,12 @@ const SignUp = () => {
                             )}
                             value={form.confirm}
                             onChange={handleChange}
-                            className="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            className="w-full pl-10 pr-10 py-3.5 rounded-xl border border-[#e9ecef] bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0066CC]/20 focus:bg-white focus:border-[#0066CC]"
                             required
                         />
                         <button
                             type="button"
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#0066CC] transition-colors"
                             onClick={() =>
                                 setShowConfirmPassword(!showConfirmPassword)
                             }
@@ -190,9 +194,9 @@ const SignUp = () => {
                     <button
                         type="submit"
                         disabled={!isValid || isLoading}
-                        className={`w-full py-3 rounded-lg font-semibold text-white transition-all duration-200 flex items-center justify-center ${
+                        className={`w-full py-4 rounded-xl font-bold text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,102,204,0.2)] active:scale-[0.98] ${
                             isValid && !isLoading
-                                ? "bg-indigo-600 hover:bg-indigo-700"
+                                ? "bg-[#0066CC] hover:bg-[#0052A3] hover:shadow-[0_6px_20px_rgba(0,102,204,0.3)]"
                                 : "bg-gray-400 cursor-not-allowed"
                         }`}
                     >
@@ -235,7 +239,7 @@ const SignUp = () => {
                     {t("signup.already_have_account")}{" "}
                     <Link
                         to="/login"
-                        className="text-indigo-600 hover:text-indigo-800 font-medium underline hover:no-underline"
+                        className="text-[#0066CC] hover:text-[#0052A3] font-semibold underline hover:no-underline transition-colors"
                     >
                         {t("signin.sign_in")}
                     </Link>

@@ -250,7 +250,7 @@ const AdminLayout = ({ children }) => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden bg-gray-100">
         <section className="flex-1 overflow-y-auto p-6 bg-gray-100">
-          <div className="bg-white rounded-xl shadow-xs p-6 min-h-[calc(100vh-120px)] border border-gray-200">
+          <div className="bg-white rounded-[24px] shadow-[0_20px_40px_rgba(0,0,0,0.06)] p-6 md:p-10 min-h-[calc(100vh-120px)] border border-[#E9ECEF]">
             {children}
           </div>
         </section>

@@ -109,15 +109,15 @@ export default function CommonLogin() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8f9fa] p-4 relative overflow-hidden font-sans">
             {/* Background decoration matching Language Screen */}
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#6C63FF] opacity-5 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#6C63FF] opacity-5 rounded-full blur-3xl"></div>
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#0066CC] opacity-5 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#0066CC] opacity-5 rounded-full blur-3xl"></div>
 
-            <div className="bg-white w-full max-w-[450px] p-8 md:p-10 rounded-[20px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-[#e9ecef] relative z-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
+            <div className="bg-white w-full max-w-[420px] p-8 md:p-10 rounded-[24px] shadow-[0_20px_40px_rgba(0,0,0,0.06)] border border-[#e9ecef] relative z-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
                 {/* Header with Back Button */}
                 <div className="mb-6">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex items-center text-[#6C63FF] font-semibold hover:opacity-80 transition-opacity"
+                        className="flex items-center text-[#0066CC] font-semibold hover:opacity-80 transition-opacity"
                     >
                         <MdArrowBack size={24} className="mr-1" />
                         <span>{isMarathi ? "मागे" : "Back"}</span>
@@ -141,7 +141,7 @@ export default function CommonLogin() {
                     {/* Username Input */}
                     <div className="space-y-1">
                         <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-[#6C63FF]">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-[#0066CC]">
                                 <MdPerson className="text-[#adb5bd]" size={20} />
                             </div>
                             <input
@@ -149,10 +149,10 @@ export default function CommonLogin() {
                                 id="username"
                                 name="username"
                                 placeholder={isMarathi ? "वापरकर्तानाव" : "Username"}
-                                className={`w-full pl-11 pr-4 py-3.5 rounded-xl border bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/20 focus:bg-white ${
+                                className={`w-full pl-11 pr-4 py-3.5 rounded-xl border bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0066CC]/20 focus:bg-white ${
                                     errors.username
                                         ? "border-red-500"
-                                        : "border-[#e9ecef] focus:border-[#6C63FF]"
+                                        : "border-[#e9ecef] focus:border-[#0066CC]"
                                 }`}
                                 value={form.username}
                                 onChange={handleChange}
@@ -168,7 +168,7 @@ export default function CommonLogin() {
                     {/* Password Input */}
                     <div className="space-y-1">
                         <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-[#6C63FF]">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-[#0066CC]">
                                 <MdLock className="text-[#adb5bd]" size={20} />
                             </div>
                             <input
@@ -176,17 +176,17 @@ export default function CommonLogin() {
                                 id="password"
                                 name="password"
                                 placeholder={isMarathi ? "पासवर्ड" : "Password"}
-                                className={`w-full pl-11 pr-12 py-3.5 rounded-xl border bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/20 focus:bg-white ${
+                                className={`w-full pl-11 pr-12 py-3.5 rounded-xl border bg-[#f8f9fa] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0066CC]/20 focus:bg-white ${
                                     errors.password
                                         ? "border-red-500"
-                                        : "border-[#e9ecef] focus:border-[#6C63FF]"
+                                        : "border-[#e9ecef] focus:border-[#0066CC]"
                                 }`}
                                 value={form.password}
                                 onChange={handleChange}
                             />
                             <button
                                 type="button"
-                                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#adb5bd] hover:text-[#6C63FF] transition-colors"
+                                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#adb5bd] hover:text-[#0066CC] transition-colors"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
                                 {showPassword ? (
@@ -209,7 +209,7 @@ export default function CommonLogin() {
                                 type="checkbox"
                                 checked={rememberMe}
                                 onChange={() => setRememberMe(!rememberMe)}
-                                className="form-checkbox h-4 w-4 text-[#6C63FF] transition duration-150 ease-in-out rounded border-[#e9ecef] focus:ring-[#6C63FF]/20"
+                                className="form-checkbox h-4 w-4 text-[#0066CC] transition duration-150 ease-in-out rounded border-[#e9ecef] focus:ring-[#0066CC]/20"
                             />
                             <span className="ml-2 text-[#6C757D] group-hover:text-[#495057] transition-colors">
                                 {t("login.rememberMe")}
@@ -220,10 +220,10 @@ export default function CommonLogin() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full py-4 rounded-xl font-bold text-white transition-all duration-300 shadow-[0_4px_12px_rgba(108,99,255,0.2)] active:scale-[0.98] ${
+                        className={`w-full py-4 rounded-xl font-bold text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,102,204,0.2)] active:scale-[0.98] ${
                             loading
-                                ? "bg-[#6C63FF]/70 cursor-not-allowed"
-                                : "bg-[#6C63FF] hover:bg-[#5a52d5] hover:shadow-[0_6px_20px_rgba(108,99,255,0.3)]"
+                                ? "bg-[#0066CC]/70 cursor-not-allowed"
+                                : "bg-[#0066CC] hover:bg-[#0052A3] hover:shadow-[0_6px_20px_rgba(0,102,204,0.3)]"
                         }`}
                     >
                         {loading ? (

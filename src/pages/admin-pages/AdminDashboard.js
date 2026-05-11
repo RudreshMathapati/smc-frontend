@@ -656,12 +656,12 @@ const AdminDashboard = () => {
           <button
             onClick={handleManualRefresh}
             disabled={refreshing}
-            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-2.5 bg-[#0066CC] text-white rounded-xl shadow-lg shadow-blue-200 hover:bg-[#0052A3] transition-all disabled:opacity-50 active:scale-95"
           >
             <FiRefreshCw
-              className={`${refreshing ? "animate-spin" : ""} text-gray-600`}
+              className={`${refreshing ? "animate-spin" : ""} text-white`}
             />
-            <span className="text-sm font-medium text-gray-600">Refresh</span>
+            <span className="text-sm font-semibold">Refresh</span>
           </button>
         </div>
 
@@ -683,7 +683,7 @@ const AdminDashboard = () => {
             {fleetCards.map((card, index) => (
               <div
                 key={index}
-                className={`rounded-xl border border-gray-200 shadow-sm p-5 transition-all duration-300 hover:shadow-lg hover:scale-105 ${card.bg}`}
+                className={`rounded-[24px] border border-[#E9ECEF] shadow-[0_10px_30px_rgba(0,0,0,0.04)] p-6 transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:scale-[1.02] ${card.bg}`}
               >
                 <div className="flex justify-between items-start">
                   <div>
@@ -726,7 +726,7 @@ const AdminDashboard = () => {
             {revenueCards.map((card, index) => (
               <div
                 key={index}
-                className={`rounded-xl border border-gray-200 shadow-sm p-5 transition-all duration-300 hover:shadow-lg ${card.bg}`}
+                className={`rounded-[24px] border border-[#E9ECEF] shadow-[0_10px_30px_rgba(0,0,0,0.04)] p-5 transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] ${card.bg}`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -753,7 +753,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* System Overview Chart */}
-        <div className="bg-white rounded-xl shadow-sm p-5 sm:p-6 border border-gray-200">
+        <div className="bg-white rounded-[24px] shadow-[0_20px_40px_rgba(0,0,0,0.06)] p-6 sm:p-8 border border-[#E9ECEF]">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             System Overview
           </h2>
