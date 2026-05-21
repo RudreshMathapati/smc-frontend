@@ -447,29 +447,11 @@
 // };
 
 // export default AdminDashboard;
-// FULL PREMIUM DYNAMIC ADMIN DASHBOARD
-// SAME LIGHT THEME AS YOUR IMAGE
-// ADDITIONS:
-// ✅ Hover Graphs
-// ✅ Animated Cards
-// ✅ Dynamic UI
-// ✅ Premium Glassmorphism
-// ✅ Live Effects
-// ✅ Better Charts
-// ✅ Beautiful Layout
-// ✅ Enterprise Dashboard Feel
+// FULL NEXT-LEVEL PREMIUM ADMIN DASHBOARD
+// DYNAMIC + HOVER ANALYTICS + LABELS + CLEAN ENTERPRISE UI
 
 import React, { useEffect, useState } from "react";
 import AdminLayout from "./AdminLayout";
-import { motion, AnimatePresence } from "framer-motion";
-import CountUp from "react-countup";
-
-import {
-  AreaChart,
-  Area,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
 
 import {
   FiTruck,
@@ -477,19 +459,41 @@ import {
   FiPause,
   FiTool,
   FiDollarSign,
-  FiTrendingUp,
   FiActivity,
   FiWifi,
   FiRefreshCw,
+  FiTrendingUp,
 } from "react-icons/fi";
 
+import { motion, AnimatePresence } from "framer-motion";
+
+import CountUp from "react-countup";
+
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  Tooltip,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+} from "recharts";
+
 import { io } from "socket.io-client";
+
 import axiosInstance from "../../utils/axiosInstance";
 
 let socket;
 
 const AdminDashboard = () => {
+
   const [loading, setLoading] = useState(true);
+
+  const [hoveredCard, setHoveredCard] =
+    useState(null);
+
+  const [lastUpdated, setLastUpdated] =
+    useState(new Date());
 
   const [dashboard, setDashboard] = useState({
     fleet: {},
@@ -497,22 +501,33 @@ const AdminDashboard = () => {
     stats: {},
   });
 
-  const [hoveredCard, setHoveredCard] = useState(null);
+  const [liveChartData, setLiveChartData] =
+    useState([]);
 
-  const [lastUpdated, setLastUpdated] = useState(new Date());
-
-  const [liveRevenueData, setLiveRevenueData] = useState([]);
+  // ================= SOCKET =================
 
   useEffect(() => {
+
     socket = io(process.env.REACT_APP_API_URL);
 
+    socket.on("connect", () => {
+      console.log("✅ Connected");
+    });
+
     socket.on("dashboard:update", (data) => {
+
       setDashboard(data);
 
-      setLiveRevenueData((prev) => [
+      setLiveChartData((prev) => [
         ...prev.slice(-9),
         {
-          value: data.revenue.collectionToday,
+          time: new Date().toLocaleTimeString(),
+          revenue:
+            data.revenue.collectionToday || 0,
+          running:
+            data.fleet.runningBuses || 0,
+          trips:
+            data.fleet.tripsRunningNow || 0,
         },
       ]);
 
@@ -524,77 +539,103 @@ const AdminDashboard = () => {
     fetchInitialData();
 
     return () => socket.disconnect();
+
   }, []);
 
+  // ================= FETCH =================
+
   const fetchInitialData = async () => {
+
     try {
+
       const res = await axiosInstance.get(
         "/api/dashboard/analytics",
       );
 
       setDashboard(res.data);
 
-      setLiveRevenueData([
+      setLiveChartData([
         {
-          value: res.data.revenue.collectionToday,
+          time: new Date().toLocaleTimeString(),
+          revenue:
+            res.data.revenue.collectionToday || 0,
+          running:
+            res.data.fleet.runningBuses || 0,
+          trips:
+            res.data.fleet.tripsRunningNow || 0,
         },
       ]);
 
       setLoading(false);
+
     } catch (err) {
       console.log(err);
     }
   };
 
+  // ================= CARDS =================
+
   const cards = [
     {
       id: 1,
       title: "Total Buses",
-      value: dashboard.fleet.totalBuses || 0,
+      value:
+        dashboard.fleet.totalBuses || 0,
       subtitle: "Total fleet size",
       icon: <FiTruck />,
+      graphKey: "running",
+      color: "#2563EB",
       bg: "from-blue-50 to-blue-100",
+      text: "text-blue-700",
       iconBg: "bg-blue-500/10",
       iconColor: "text-blue-600",
-      textColor: "text-blue-700",
-      graphColor: "#2563EB",
     },
+
     {
       id: 2,
       title: "Running Buses",
-      value: dashboard.fleet.runningBuses || 0,
+      value:
+        dashboard.fleet.runningBuses || 0,
       subtitle: "Currently operating",
       icon: <FiPlay />,
+      graphKey: "running",
+      color: "#10B981",
       bg: "from-emerald-50 to-emerald-100",
+      text: "text-emerald-700",
       iconBg: "bg-emerald-500/10",
       iconColor: "text-emerald-600",
-      textColor: "text-emerald-700",
-      graphColor: "#10B981",
     },
+
     {
       id: 3,
       title: "Idle Buses",
-      value: dashboard.fleet.idleBuses || 0,
+      value:
+        dashboard.fleet.idleBuses || 0,
       subtitle: "Waiting in depot",
       icon: <FiPause />,
+      graphKey: "running",
+      color: "#F59E0B",
       bg: "from-amber-50 to-amber-100",
+      text: "text-amber-700",
       iconBg: "bg-amber-500/10",
       iconColor: "text-amber-600",
-      textColor: "text-amber-700",
-      graphColor: "#F59E0B",
     },
+
     {
       id: 4,
       title: "Breakdown Buses",
-      value: dashboard.fleet.breakdownBuses || 0,
+      value:
+        dashboard.fleet.breakdownBuses || 0,
       subtitle: "Under maintenance",
       icon: <FiTool />,
+      graphKey: "running",
+      color: "#EF4444",
       bg: "from-red-50 to-red-100",
+      text: "text-red-700",
       iconBg: "bg-red-500/10",
       iconColor: "text-red-600",
-      textColor: "text-red-700",
-      graphColor: "#EF4444",
     },
+
     {
       id: 5,
       title: "Revenue Today",
@@ -603,37 +644,43 @@ const AdminDashboard = () => {
       prefix: "₹",
       subtitle: "Today's collection",
       icon: <FiDollarSign />,
+      graphKey: "revenue",
+      color: "#8B5CF6",
       bg: "from-violet-50 to-violet-100",
+      text: "text-violet-700",
       iconBg: "bg-violet-500/10",
       iconColor: "text-violet-600",
-      textColor: "text-violet-700",
-      graphColor: "#8B5CF6",
     },
+
     {
       id: 6,
       title: "Trips Running",
       value:
         dashboard.fleet.tripsRunningNow || 0,
-      subtitle: "Active trips",
+      subtitle: "Currently active",
       icon: <FiActivity />,
+      graphKey: "trips",
+      color: "#06B6D4",
       bg: "from-cyan-50 to-cyan-100",
+      text: "text-cyan-700",
       iconBg: "bg-cyan-500/10",
       iconColor: "text-cyan-600",
-      textColor: "text-cyan-700",
-      graphColor: "#06B6D4",
     },
   ];
 
   return (
-    <AdminLayout>
-      <div className="min-h-screen bg-[#F4F7FB] rounded-[30px] p-6">
 
-        {/* HEADER */}
+    <AdminLayout>
+
+      <div className="min-h-screen bg-[#F5F7FB] rounded-[30px] p-6">
+
+        {/* ================= HEADER ================= */}
 
         <div className="flex justify-between items-center flex-wrap gap-5 mb-10">
 
           <div>
-            <h1 className="text-4xl font-bold text-[#111827] tracking-tight">
+
+            <h1 className="text-4xl font-bold text-[#111827]">
               Admin Dashboard
             </h1>
 
@@ -642,93 +689,118 @@ const AdminDashboard = () => {
             </p>
 
             <div className="flex items-center gap-2 mt-3">
-              <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
 
-              <span className="text-sm text-green-600 font-medium">
-                Live System Active
+              <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+
+              <span className="text-sm font-medium text-green-600">
+                LIVE SYSTEM ACTIVE
               </span>
+
             </div>
           </div>
 
           <button
             onClick={fetchInitialData}
-            className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] transition-all duration-300 text-white px-6 py-3 rounded-2xl shadow-lg shadow-blue-200"
+            className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] transition-all text-white px-6 py-3 rounded-2xl shadow-lg shadow-blue-200"
           >
+
             <FiRefreshCw />
+
             Refresh
+
           </button>
         </div>
 
-        {/* LIVE STATUS BAR */}
+        {/* ================= TOP STATUS ================= */}
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
 
-          <div className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-sm">
-            <div className="flex items-center justify-between">
+          <div className="bg-white rounded-3xl p-5 border border-[#E5E7EB] shadow-sm">
+
+            <div className="flex justify-between">
+
               <div>
-                <p className="text-gray-500 text-sm">
+
+                <p className="text-sm text-gray-500">
                   Socket Status
                 </p>
 
-                <h2 className="text-xl font-bold text-green-600 mt-1">
+                <h2 className="text-2xl font-bold text-green-600 mt-2">
                   Connected
                 </h2>
+
               </div>
 
-              <FiWifi className="text-3xl text-green-500" />
+              <FiWifi className="text-4xl text-green-500" />
+
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-sm">
-            <div className="flex items-center justify-between">
+          <div className="bg-white rounded-3xl p-5 border border-[#E5E7EB] shadow-sm">
+
+            <div className="flex justify-between">
+
               <div>
-                <p className="text-gray-500 text-sm">
+
+                <p className="text-sm text-gray-500">
                   Active Routes
                 </p>
 
-                <h2 className="text-xl font-bold text-blue-600 mt-1">
+                <h2 className="text-2xl font-bold text-blue-600 mt-2">
                   {dashboard.stats.routes || 0}
                 </h2>
+
               </div>
 
-              <FiTrendingUp className="text-3xl text-blue-500" />
+              <FiTrendingUp className="text-4xl text-blue-500" />
+
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-sm">
-            <div className="flex items-center justify-between">
+          <div className="bg-white rounded-3xl p-5 border border-[#E5E7EB] shadow-sm">
+
+            <div className="flex justify-between">
+
               <div>
-                <p className="text-gray-500 text-sm">
+
+                <p className="text-sm text-gray-500">
                   POS Devices
                 </p>
 
-                <h2 className="text-xl font-bold text-violet-600 mt-1">
+                <h2 className="text-2xl font-bold text-violet-600 mt-2">
                   {dashboard.stats.posDevices || 0}
                 </h2>
+
               </div>
 
-              <FiActivity className="text-3xl text-violet-500" />
+              <FiActivity className="text-4xl text-violet-500" />
+
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-sm">
-            <div className="flex items-center justify-between">
+          <div className="bg-white rounded-3xl p-5 border border-[#E5E7EB] shadow-sm">
+
+            <div className="flex justify-between">
+
               <div>
-                <p className="text-gray-500 text-sm">
+
+                <p className="text-sm text-gray-500">
                   Users
                 </p>
 
-                <h2 className="text-xl font-bold text-orange-600 mt-1">
+                <h2 className="text-2xl font-bold text-orange-600 mt-2">
                   {dashboard.stats.users || 0}
                 </h2>
+
               </div>
 
-              <FiTruck className="text-3xl text-orange-500" />
+              <FiTruck className="text-4xl text-orange-500" />
+
             </div>
           </div>
         </div>
 
-        {/* DYNAMIC CARDS */}
+        {/* ================= MAIN CARDS ================= */}
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
@@ -736,7 +808,6 @@ const AdminDashboard = () => {
 
             <motion.div
               key={card.id}
-              layout
               whileHover={{
                 y: -8,
                 scale: 1.02,
@@ -750,12 +821,12 @@ const AdminDashboard = () => {
               onMouseLeave={() =>
                 setHoveredCard(null)
               }
-              className={`relative overflow-hidden rounded-[28px] border border-[#E5E7EB] bg-gradient-to-br ${card.bg} shadow-[0_10px_40px_rgba(0,0,0,0.04)] p-6`}
+              className={`relative overflow-hidden rounded-[32px] border border-[#E5E7EB] bg-gradient-to-br ${card.bg} p-7 shadow-[0_10px_40px_rgba(0,0,0,0.05)]`}
             >
 
-              {/* Glow Effect */}
+              {/* GLOW */}
 
-              <div className="absolute top-0 right-0 w-40 h-40 bg-white/40 blur-3xl rounded-full"></div>
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/40 rounded-full blur-3xl"></div>
 
               {/* TOP */}
 
@@ -763,13 +834,14 @@ const AdminDashboard = () => {
 
                 <div>
 
-                  <p className="text-sm font-medium text-gray-500 tracking-wide">
+                  <p className="text-sm font-medium text-gray-500">
                     {card.title}
                   </p>
 
                   <div
-                    className={`mt-3 text-4xl font-bold ${card.textColor}`}
+                    className={`mt-3 text-5xl font-bold ${card.text}`}
                   >
+
                     {card.prefix}
 
                     <CountUp
@@ -777,23 +849,26 @@ const AdminDashboard = () => {
                       duration={2}
                       separator=","
                     />
+
                   </div>
 
-                  <p className="text-xs text-gray-400 mt-2">
+                  <p className="text-gray-400 text-sm mt-2">
                     {card.subtitle}
                   </p>
+
                 </div>
 
                 <div
-                  className={`w-14 h-14 rounded-2xl ${card.iconBg} flex items-center justify-center text-2xl ${card.iconColor}`}
+                  className={`w-16 h-16 rounded-2xl ${card.iconBg} flex items-center justify-center text-3xl ${card.iconColor}`}
                 >
                   {card.icon}
                 </div>
               </div>
 
-              {/* LIVE BAR */}
+              {/* PROGRESS */}
 
-              <div className="mt-5 h-2 bg-white/50 rounded-full overflow-hidden">
+              <div className="mt-8 h-2 bg-white/60 rounded-full overflow-hidden">
+
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{
@@ -807,9 +882,10 @@ const AdminDashboard = () => {
                   }}
                   className="h-full bg-white"
                 />
+
               </div>
 
-              {/* HOVER GRAPH */}
+              {/* ================= HOVER ANALYTICS ================= */}
 
               <AnimatePresence>
 
@@ -831,56 +907,171 @@ const AdminDashboard = () => {
                     transition={{
                       duration: 0.3,
                     }}
-                    className="mt-6 h-[120px]"
+                    className="mt-6 bg-white/70 backdrop-blur-md rounded-3xl p-4 border border-white/50"
                   >
 
-                    <ResponsiveContainer
-                      width="100%"
-                      height="100%"
-                    >
-                      <AreaChart
-                        data={liveRevenueData}
-                      >
-                        <defs>
-                          <linearGradient
-                            id={`gradient-${card.id}`}
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="1"
-                          >
-                            <stop
-                              offset="5%"
-                              stopColor={
-                                card.graphColor
-                              }
-                              stopOpacity={0.8}
-                            />
+                    {/* TOP */}
 
-                            <stop
-                              offset="95%"
-                              stopColor={
-                                card.graphColor
-                              }
-                              stopOpacity={0}
-                            />
-                          </linearGradient>
-                        </defs>
+                    <div className="flex justify-between items-center mb-4">
 
-                        <Tooltip />
+                      <div>
 
-                        <Area
-                          type="monotone"
-                          dataKey="value"
-                          stroke={
-                            card.graphColor
-                          }
-                          fillOpacity={1}
-                          fill={`url(#gradient-${card.id})`}
-                          strokeWidth={3}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                        <p className="text-sm font-semibold text-gray-700">
+                          Live Analytics
+                        </p>
+
+                        <p className="text-xs text-gray-400 mt-1">
+                          Last 10 updates
+                        </p>
+
+                      </div>
+
+                      <div className="text-right">
+
+                        <p className="text-green-600 font-bold">
+                          +12.5%
+                        </p>
+
+                        <p className="text-xs text-gray-400">
+                          Growth
+                        </p>
+
+                      </div>
+                    </div>
+
+                    {/* GRAPH */}
+
+                    <div className="h-[180px]">
+
+                      <ResponsiveContainer width="100%" height="100%">
+
+                        <AreaChart
+                          data={liveChartData.map(
+                            (item, index) => ({
+                              name: `T${index + 1}`,
+                              value:
+                                item[
+                                  card.graphKey
+                                ] || 0,
+                            }),
+                          )}
+                        >
+
+                          <defs>
+
+                            <linearGradient
+                              id={`gradient-${card.id}`}
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
+                            >
+
+                              <stop
+                                offset="5%"
+                                stopColor={
+                                  card.color
+                                }
+                                stopOpacity={0.4}
+                              />
+
+                              <stop
+                                offset="95%"
+                                stopColor={
+                                  card.color
+                                }
+                                stopOpacity={0}
+                              />
+
+                            </linearGradient>
+
+                          </defs>
+
+                          <CartesianGrid
+                            strokeDasharray="3 3"
+                            stroke="#E5E7EB"
+                          />
+
+                          <XAxis
+                            dataKey="name"
+                            tick={{
+                              fontSize: 11,
+                              fill: "#6B7280",
+                            }}
+                          />
+
+                          <YAxis
+                            tick={{
+                              fontSize: 11,
+                              fill: "#6B7280",
+                            }}
+                          />
+
+                          <Tooltip
+                            contentStyle={{
+                              borderRadius: "14px",
+                              border: "none",
+                              boxShadow:
+                                "0 10px 30px rgba(0,0,0,0.08)",
+                            }}
+                          />
+
+                          <Area
+                            type="monotone"
+                            dataKey="value"
+                            stroke={card.color}
+                            fillOpacity={1}
+                            fill={`url(#gradient-${card.id})`}
+                            strokeWidth={3}
+                          />
+
+                        </AreaChart>
+
+                      </ResponsiveContainer>
+
+                    </div>
+
+                    {/* BOTTOM STATS */}
+
+                    <div className="grid grid-cols-3 gap-3 mt-4">
+
+                      <div className="bg-white rounded-2xl p-3">
+
+                        <p className="text-xs text-gray-400">
+                          Peak
+                        </p>
+
+                        <h3 className="font-bold text-gray-800 mt-1">
+                          120
+                        </h3>
+
+                      </div>
+
+                      <div className="bg-white rounded-2xl p-3">
+
+                        <p className="text-xs text-gray-400">
+                          Average
+                        </p>
+
+                        <h3 className="font-bold text-gray-800 mt-1">
+                          82
+                        </h3>
+
+                      </div>
+
+                      <div className="bg-white rounded-2xl p-3">
+
+                        <p className="text-xs text-gray-400">
+                          Status
+                        </p>
+
+                        <h3 className="font-bold text-green-600 mt-1">
+                          Stable
+                        </h3>
+
+                      </div>
+
+                    </div>
 
                   </motion.div>
                 )}
@@ -890,40 +1081,51 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        {/* BIG LIVE ANALYTICS */}
+        {/* ================= BIG ANALYTICS ================= */}
 
-        <div className="mt-10 bg-white rounded-[32px] border border-[#E5E7EB] p-8 shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
+        <div className="mt-10 bg-white rounded-[36px] border border-[#E5E7EB] p-8 shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
 
           <div className="flex justify-between items-center mb-8">
 
             <div>
-              <h2 className="text-2xl font-bold text-[#111827]">
+
+              <h2 className="text-3xl font-bold text-[#111827]">
                 Revenue Analytics
               </h2>
 
-              <p className="text-gray-500 mt-1">
-                Live revenue growth tracking
+              <p className="text-gray-500 mt-2">
+                Real-time collection monitoring
               </p>
+
             </div>
 
             <div className="flex items-center gap-2">
+
               <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
 
               <span className="text-sm text-green-600 font-medium">
                 LIVE
               </span>
+
             </div>
           </div>
 
-          <div className="h-[380px]">
+          <div className="h-[400px]">
 
-            <ResponsiveContainer
-              width="100%"
-              height="100%"
-            >
-              <AreaChart data={liveRevenueData}>
+            <ResponsiveContainer width="100%" height="100%">
+
+              <AreaChart
+                data={liveChartData.map(
+                  (item, index) => ({
+                    name: `Update ${index + 1}`,
+                    revenue:
+                      item.revenue || 0,
+                  }),
+                )}
+              >
 
                 <defs>
+
                   <linearGradient
                     id="mainGraph"
                     x1="0"
@@ -931,10 +1133,11 @@ const AdminDashboard = () => {
                     x2="0"
                     y2="1"
                   >
+
                     <stop
                       offset="5%"
                       stopColor="#2563EB"
-                      stopOpacity={0.5}
+                      stopOpacity={0.4}
                     />
 
                     <stop
@@ -942,34 +1145,59 @@ const AdminDashboard = () => {
                       stopColor="#2563EB"
                       stopOpacity={0}
                     />
+
                   </linearGradient>
+
                 </defs>
+
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#E5E7EB"
+                />
+
+                <XAxis
+                  dataKey="name"
+                  tick={{
+                    fill: "#6B7280",
+                  }}
+                />
+
+                <YAxis
+                  tick={{
+                    fill: "#6B7280",
+                  }}
+                />
 
                 <Tooltip />
 
                 <Area
                   type="monotone"
-                  dataKey="value"
+                  dataKey="revenue"
                   stroke="#2563EB"
                   fillOpacity={1}
                   fill="url(#mainGraph)"
                   strokeWidth={4}
                 />
+
               </AreaChart>
+
             </ResponsiveContainer>
 
           </div>
         </div>
 
-        {/* FOOTER */}
+        {/* ================= FOOTER ================= */}
 
         <div className="mt-8 text-center text-gray-400 text-sm">
+
           Last Updated :
           {" "}
           {lastUpdated.toLocaleTimeString()}
+
         </div>
 
       </div>
+
     </AdminLayout>
   );
 };
