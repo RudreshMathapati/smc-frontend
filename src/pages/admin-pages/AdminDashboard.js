@@ -447,33 +447,40 @@
 // };
 
 // export default AdminDashboard;
-// AdminDashboard.jsx
+// FULL PREMIUM DYNAMIC ADMIN DASHBOARD
+// SAME LIGHT THEME AS YOUR IMAGE
+// ADDITIONS:
+// ✅ Hover Graphs
+// ✅ Animated Cards
+// ✅ Dynamic UI
+// ✅ Premium Glassmorphism
+// ✅ Live Effects
+// ✅ Better Charts
+// ✅ Beautiful Layout
+// ✅ Enterprise Dashboard Feel
 
 import React, { useEffect, useState } from "react";
 import AdminLayout from "./AdminLayout";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
+
 import {
   AreaChart,
   Area,
   ResponsiveContainer,
-  CartesianGrid,
   Tooltip,
-  XAxis,
-  YAxis,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
 
 import {
   FiTruck,
-  FiActivity,
+  FiPlay,
+  FiPause,
+  FiTool,
   FiDollarSign,
+  FiTrendingUp,
+  FiActivity,
   FiWifi,
-  FiAlertTriangle,
   FiRefreshCw,
-  FiMapPin,
 } from "react-icons/fi";
 
 import { io } from "socket.io-client";
@@ -490,29 +497,27 @@ const AdminDashboard = () => {
     stats: {},
   });
 
+  const [hoveredCard, setHoveredCard] = useState(null);
+
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
-  const [revenueData, setRevenueData] = useState([]);
+  const [liveRevenueData, setLiveRevenueData] = useState([]);
 
   useEffect(() => {
     socket = io(process.env.REACT_APP_API_URL);
 
-    socket.on("connect", () => {
-      console.log("✅ Socket Connected");
-    });
-
     socket.on("dashboard:update", (data) => {
       setDashboard(data);
 
-      setRevenueData((prev) => [
-        ...prev.slice(-6),
+      setLiveRevenueData((prev) => [
+        ...prev.slice(-9),
         {
-          time: new Date().toLocaleTimeString(),
-          revenue: data.revenue.collectionToday,
+          value: data.revenue.collectionToday,
         },
       ]);
 
       setLastUpdated(new Date());
+
       setLoading(false);
     });
 
@@ -523,14 +528,15 @@ const AdminDashboard = () => {
 
   const fetchInitialData = async () => {
     try {
-      const res = await axiosInstance.get("/api/dashboard/analytics");
+      const res = await axiosInstance.get(
+        "/api/dashboard/analytics",
+      );
 
       setDashboard(res.data);
 
-      setRevenueData([
+      setLiveRevenueData([
         {
-          time: new Date().toLocaleTimeString(),
-          revenue: res.data.revenue.collectionToday,
+          value: res.data.revenue.collectionToday,
         },
       ]);
 
@@ -540,344 +546,429 @@ const AdminDashboard = () => {
     }
   };
 
-  const fleetEfficiency = dashboard.fleet.totalBuses
-    ? (
-        (dashboard.fleet.runningBuses /
-          dashboard.fleet.totalBuses) *
-        100
-      ).toFixed(1)
-    : 0;
-
   const cards = [
     {
+      id: 1,
+      title: "Total Buses",
+      value: dashboard.fleet.totalBuses || 0,
+      subtitle: "Total fleet size",
+      icon: <FiTruck />,
+      bg: "from-blue-50 to-blue-100",
+      iconBg: "bg-blue-500/10",
+      iconColor: "text-blue-600",
+      textColor: "text-blue-700",
+      graphColor: "#2563EB",
+    },
+    {
+      id: 2,
       title: "Running Buses",
       value: dashboard.fleet.runningBuses || 0,
-      icon: <FiTruck />,
-      color: "from-cyan-500 to-blue-600",
+      subtitle: "Currently operating",
+      icon: <FiPlay />,
+      bg: "from-emerald-50 to-emerald-100",
+      iconBg: "bg-emerald-500/10",
+      iconColor: "text-emerald-600",
+      textColor: "text-emerald-700",
+      graphColor: "#10B981",
     },
     {
-      title: "Trips Running",
-      value: dashboard.fleet.tripsRunningNow || 0,
-      icon: <FiActivity />,
-      color: "from-violet-500 to-purple-600",
-    },
-    {
-      title: "Revenue Today",
-      value: dashboard.revenue.collectionToday || 0,
-      prefix: "₹",
-      icon: <FiDollarSign />,
-      color: "from-emerald-500 to-green-600",
-    },
-    {
-      title: "GPS Online",
-      value: fleetEfficiency,
-      suffix: "%",
-      icon: <FiWifi />,
-      color: "from-orange-500 to-red-500",
-    },
-  ];
-
-  const fleetData = [
-    {
-      name: "Running",
-      value: dashboard.fleet.runningBuses || 0,
-    },
-    {
-      name: "Idle",
+      id: 3,
+      title: "Idle Buses",
       value: dashboard.fleet.idleBuses || 0,
+      subtitle: "Waiting in depot",
+      icon: <FiPause />,
+      bg: "from-amber-50 to-amber-100",
+      iconBg: "bg-amber-500/10",
+      iconColor: "text-amber-600",
+      textColor: "text-amber-700",
+      graphColor: "#F59E0B",
     },
     {
-      name: "Breakdown",
+      id: 4,
+      title: "Breakdown Buses",
       value: dashboard.fleet.breakdownBuses || 0,
+      subtitle: "Under maintenance",
+      icon: <FiTool />,
+      bg: "from-red-50 to-red-100",
+      iconBg: "bg-red-500/10",
+      iconColor: "text-red-600",
+      textColor: "text-red-700",
+      graphColor: "#EF4444",
+    },
+    {
+      id: 5,
+      title: "Revenue Today",
+      value:
+        dashboard.revenue.collectionToday || 0,
+      prefix: "₹",
+      subtitle: "Today's collection",
+      icon: <FiDollarSign />,
+      bg: "from-violet-50 to-violet-100",
+      iconBg: "bg-violet-500/10",
+      iconColor: "text-violet-600",
+      textColor: "text-violet-700",
+      graphColor: "#8B5CF6",
+    },
+    {
+      id: 6,
+      title: "Trips Running",
+      value:
+        dashboard.fleet.tripsRunningNow || 0,
+      subtitle: "Active trips",
+      icon: <FiActivity />,
+      bg: "from-cyan-50 to-cyan-100",
+      iconBg: "bg-cyan-500/10",
+      iconColor: "text-cyan-600",
+      textColor: "text-cyan-700",
+      graphColor: "#06B6D4",
     },
   ];
-
-  const COLORS = ["#06B6D4", "#EAB308", "#EF4444"];
 
   return (
     <AdminLayout>
-      <div className="min-h-screen bg-[#081028] text-white p-6 rounded-[30px]">
+      <div className="min-h-screen bg-[#F4F7FB] rounded-[30px] p-6">
 
         {/* HEADER */}
 
-        <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
+        <div className="flex justify-between items-center flex-wrap gap-5 mb-10">
+
           <div>
-            <h1 className="text-4xl font-bold tracking-wide">
-              Transport Control Center
+            <h1 className="text-4xl font-bold text-[#111827] tracking-tight">
+              Admin Dashboard
             </h1>
 
-            <p className="text-gray-400 mt-2">
-              Real-time fleet monitoring dashboard
+            <p className="text-gray-500 mt-2">
+              Real-time fleet monitoring & analytics
             </p>
 
             <div className="flex items-center gap-2 mt-3">
-              <span className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
+              <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
 
-              <span className="text-sm text-green-400">
-                LIVE SYSTEM ACTIVE
+              <span className="text-sm text-green-600 font-medium">
+                Live System Active
               </span>
             </div>
           </div>
 
           <button
             onClick={fetchInitialData}
-            className="bg-cyan-500 hover:bg-cyan-600 transition px-5 py-3 rounded-xl flex items-center gap-2 shadow-lg shadow-cyan-500/30"
+            className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] transition-all duration-300 text-white px-6 py-3 rounded-2xl shadow-lg shadow-blue-200"
           >
             <FiRefreshCw />
             Refresh
           </button>
         </div>
 
-        {/* KPI CARDS */}
+        {/* LIVE STATUS BAR */}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-          {cards.map((card, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ scale: 1.03 }}
-              className={`bg-gradient-to-br ${card.color} rounded-3xl p-6 shadow-2xl relative overflow-hidden`}
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
 
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-sm text-white/70 mb-3">
-                    {card.title}
-                  </p>
-
-                  <h2 className="text-4xl font-bold">
-                    {card.prefix}
-
-                    <CountUp
-                      end={Number(card.value)}
-                      duration={2}
-                    />
-
-                    {card.suffix}
-                  </h2>
-                </div>
-
-                <div className="text-4xl text-white/80">
-                  {card.icon}
-                </div>
-              </div>
-
-              <div className="mt-5 h-2 bg-white/20 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{
-                    width: `${Math.min(card.value, 100)}%`,
-                  }}
-                  transition={{ duration: 1.5 }}
-                  className="h-full bg-white"
-                />
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* CHARTS */}
-
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
-
-          {/* Revenue Chart */}
-
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            className="xl:col-span-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6"
-          >
-            <div className="flex justify-between mb-6">
+          <div className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-sm">
+            <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold">
-                  Revenue Analytics
-                </h2>
-
-                <p className="text-gray-400 text-sm mt-1">
-                  Live revenue updates
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 text-green-400">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-ping"></span>
-                LIVE
-              </div>
-            </div>
-
-            <div className="h-[350px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenueData}>
-                  <defs>
-                    <linearGradient
-                      id="colorRevenue"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor="#06B6D4"
-                        stopOpacity={0.8}
-                      />
-
-                      <stop
-                        offset="95%"
-                        stopColor="#06B6D4"
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
-
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="#1E293B"
-                  />
-
-                  <XAxis dataKey="time" stroke="#94A3B8" />
-
-                  <YAxis stroke="#94A3B8" />
-
-                  <Tooltip />
-
-                  <Area
-                    type="monotone"
-                    dataKey="revenue"
-                    stroke="#06B6D4"
-                    fillOpacity={1}
-                    fill="url(#colorRevenue)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-
-          {/* Fleet Status */}
-
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6"
-          >
-            <h2 className="text-2xl font-bold mb-6">
-              Fleet Health
-            </h2>
-
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={fleetData}
-                    dataKey="value"
-                    outerRadius={100}
-                    innerRadius={60}
-                  >
-                    {fleetData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index]}
-                      />
-                    ))}
-                  </Pie>
-
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div className="space-y-3 mt-4">
-              {fleetData.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between"
-                >
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{
-                        background: COLORS[index],
-                      }}
-                    ></div>
-
-                    <span>{item.name}</span>
-                  </div>
-
-                  <span className="font-bold">
-                    {item.value}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* LIVE STATUS */}
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-          <motion.div
-            whileHover={{ y: -5 }}
-            className="bg-gradient-to-br from-red-500/20 to-red-900/20 border border-red-500/20 rounded-3xl p-6"
-          >
-            <div className="flex justify-between">
-              <div>
-                <p className="text-red-300 mb-2">
-                  Breakdown Buses
+                <p className="text-gray-500 text-sm">
+                  Socket Status
                 </p>
 
-                <h2 className="text-5xl font-bold">
-                  {dashboard.fleet.breakdownBuses || 0}
+                <h2 className="text-xl font-bold text-green-600 mt-1">
+                  Connected
                 </h2>
               </div>
 
-              <FiAlertTriangle className="text-5xl text-red-400" />
+              <FiWifi className="text-3xl text-green-500" />
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            whileHover={{ y: -5 }}
-            className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/20 border border-cyan-500/20 rounded-3xl p-6"
-          >
-            <div className="flex justify-between">
+          <div className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-sm">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-cyan-300 mb-2">
+                <p className="text-gray-500 text-sm">
                   Active Routes
                 </p>
 
-                <h2 className="text-5xl font-bold">
+                <h2 className="text-xl font-bold text-blue-600 mt-1">
                   {dashboard.stats.routes || 0}
                 </h2>
               </div>
 
-              <FiMapPin className="text-5xl text-cyan-400" />
+              <FiTrendingUp className="text-3xl text-blue-500" />
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            whileHover={{ y: -5 }}
-            className="bg-gradient-to-br from-emerald-500/20 to-emerald-900/20 border border-emerald-500/20 rounded-3xl p-6"
-          >
-            <div className="flex justify-between">
+          <div className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-sm">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-emerald-300 mb-2">
-                  Trips Completed
+                <p className="text-gray-500 text-sm">
+                  POS Devices
                 </p>
 
-                <h2 className="text-5xl font-bold">
-                  {dashboard.fleet.tripsCompletedToday || 0}
+                <h2 className="text-xl font-bold text-violet-600 mt-1">
+                  {dashboard.stats.posDevices || 0}
                 </h2>
               </div>
 
-              <FiActivity className="text-5xl text-emerald-400" />
+              <FiActivity className="text-3xl text-violet-500" />
             </div>
-          </motion.div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm">
+                  Users
+                </p>
+
+                <h2 className="text-xl font-bold text-orange-600 mt-1">
+                  {dashboard.stats.users || 0}
+                </h2>
+              </div>
+
+              <FiTruck className="text-3xl text-orange-500" />
+            </div>
+          </div>
+        </div>
+
+        {/* DYNAMIC CARDS */}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+          {cards.map((card) => (
+
+            <motion.div
+              key={card.id}
+              layout
+              whileHover={{
+                y: -8,
+                scale: 1.02,
+              }}
+              transition={{
+                duration: 0.3,
+              }}
+              onMouseEnter={() =>
+                setHoveredCard(card.id)
+              }
+              onMouseLeave={() =>
+                setHoveredCard(null)
+              }
+              className={`relative overflow-hidden rounded-[28px] border border-[#E5E7EB] bg-gradient-to-br ${card.bg} shadow-[0_10px_40px_rgba(0,0,0,0.04)] p-6`}
+            >
+
+              {/* Glow Effect */}
+
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/40 blur-3xl rounded-full"></div>
+
+              {/* TOP */}
+
+              <div className="flex justify-between items-start relative z-10">
+
+                <div>
+
+                  <p className="text-sm font-medium text-gray-500 tracking-wide">
+                    {card.title}
+                  </p>
+
+                  <div
+                    className={`mt-3 text-4xl font-bold ${card.textColor}`}
+                  >
+                    {card.prefix}
+
+                    <CountUp
+                      end={card.value}
+                      duration={2}
+                      separator=","
+                    />
+                  </div>
+
+                  <p className="text-xs text-gray-400 mt-2">
+                    {card.subtitle}
+                  </p>
+                </div>
+
+                <div
+                  className={`w-14 h-14 rounded-2xl ${card.iconBg} flex items-center justify-center text-2xl ${card.iconColor}`}
+                >
+                  {card.icon}
+                </div>
+              </div>
+
+              {/* LIVE BAR */}
+
+              <div className="mt-5 h-2 bg-white/50 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: `${Math.min(
+                      card.value,
+                      100,
+                    )}%`,
+                  }}
+                  transition={{
+                    duration: 1.5,
+                  }}
+                  className="h-full bg-white"
+                />
+              </div>
+
+              {/* HOVER GRAPH */}
+
+              <AnimatePresence>
+
+                {hoveredCard === card.id && (
+
+                  <motion.div
+                    initial={{
+                      opacity: 0,
+                      y: 20,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: 20,
+                    }}
+                    transition={{
+                      duration: 0.3,
+                    }}
+                    className="mt-6 h-[120px]"
+                  >
+
+                    <ResponsiveContainer
+                      width="100%"
+                      height="100%"
+                    >
+                      <AreaChart
+                        data={liveRevenueData}
+                      >
+                        <defs>
+                          <linearGradient
+                            id={`gradient-${card.id}`}
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop
+                              offset="5%"
+                              stopColor={
+                                card.graphColor
+                              }
+                              stopOpacity={0.8}
+                            />
+
+                            <stop
+                              offset="95%"
+                              stopColor={
+                                card.graphColor
+                              }
+                              stopOpacity={0}
+                            />
+                          </linearGradient>
+                        </defs>
+
+                        <Tooltip />
+
+                        <Area
+                          type="monotone"
+                          dataKey="value"
+                          stroke={
+                            card.graphColor
+                          }
+                          fillOpacity={1}
+                          fill={`url(#gradient-${card.id})`}
+                          strokeWidth={3}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+            </motion.div>
+          ))}
+        </div>
+
+        {/* BIG LIVE ANALYTICS */}
+
+        <div className="mt-10 bg-white rounded-[32px] border border-[#E5E7EB] p-8 shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
+
+          <div className="flex justify-between items-center mb-8">
+
+            <div>
+              <h2 className="text-2xl font-bold text-[#111827]">
+                Revenue Analytics
+              </h2>
+
+              <p className="text-gray-500 mt-1">
+                Live revenue growth tracking
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+
+              <span className="text-sm text-green-600 font-medium">
+                LIVE
+              </span>
+            </div>
+          </div>
+
+          <div className="h-[380px]">
+
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+            >
+              <AreaChart data={liveRevenueData}>
+
+                <defs>
+                  <linearGradient
+                    id="mainGraph"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="5%"
+                      stopColor="#2563EB"
+                      stopOpacity={0.5}
+                    />
+
+                    <stop
+                      offset="95%"
+                      stopColor="#2563EB"
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                </defs>
+
+                <Tooltip />
+
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#2563EB"
+                  fillOpacity={1}
+                  fill="url(#mainGraph)"
+                  strokeWidth={4}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+
+          </div>
         </div>
 
         {/* FOOTER */}
 
-        <div className="mt-8 text-center text-gray-500 text-sm">
-          Last updated:
+        <div className="mt-8 text-center text-gray-400 text-sm">
+          Last Updated :
           {" "}
           {lastUpdated.toLocaleTimeString()}
         </div>
+
       </div>
     </AdminLayout>
   );
