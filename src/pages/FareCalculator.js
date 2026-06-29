@@ -15,7 +15,7 @@ const FareCalculator = () => {
   const fetchStops = async () => {
     try {
       const res = await axiosInstance.get(`/routes/${routeId}`);
-      
+
       // Take first trip stops (you can improve later)
       const routeStops = res.data.trips[0].stops;
 

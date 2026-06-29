@@ -42,6 +42,8 @@ const navItems = [
     icon: <FiMap className="text-lg" />,
     submenu: [
       { path: "/admin/routes", label: "Manage Routes" },
+      { path: "/admin/route-master", label: "Route Master" },
+      { path: "/admin/stop-master", label: "Stop Master" },
       { path: "/admin/live-tracking", label: "Live Tracking" },
     ],
   },
@@ -63,7 +65,7 @@ const navItems = [
     submenu: [
       {
         path: "/admin/conductors",
-        label:"manage conductors",
+        label: "manage conductors",
       },
       {
         path: "/admin/conductor-report",
@@ -72,6 +74,21 @@ const navItems = [
       {
         path: "/admin/conductor-bus-assign",
         label: "Conductor Bus Assign",
+      },
+      {
+        path: "/admin/manage-shifts",
+        label: "Manage Shifts",
+      },
+    ],
+    exact: true,
+  },
+  {
+    label: "Drivers",
+    icon: <FiUserCheck className="text-lg" />,
+    submenu: [
+      {
+        path: "/admin/drivers",
+        label: "Manage Drivers",
       },
     ],
     exact: true,
@@ -185,7 +202,7 @@ const AdminLayout = ({ children }) => {
             const isExpanded = expandedMenus[item.label] || isItemActive;
 
             return (
-              <div key={item.path} className="space-y-1">
+              <div key={item.label} className="space-y-1">
                 <div
                   onClick={() => (hasSubmenu ? toggleMenu(item.label) : null)}
                   className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition duration-200 cursor-pointer ${

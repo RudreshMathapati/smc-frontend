@@ -31,6 +31,8 @@ const ManageRoutes = () => {
   const [insertMode, setInsertMode] = useState(null); // "above" or "below"
   const [editAllMode, setEditAllMode] = useState(false);
   const [bulkStops, setBulkStops] = useState([]);
+  const [routeMasterData, setRouteMasterData] = useState([]);
+  const [stopMasterData, setStopMasterData] = useState([]);
   const [form, setForm] = useState({
     routeId: "",
     source: "",
@@ -72,11 +74,6 @@ const ManageRoutes = () => {
       }));
 
       setRoutes(cleanData);
-
-      // Fetch unique sources and destinations for suggestions
-      const stopsRes = await axiosInstance.get("/api/routes");
-      setUniqueSources(stopsRes.data.sources);
-      setUniqueDestinations(stopsRes.data.destinations);
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to fetch routes");
     } finally {
@@ -84,13 +81,65 @@ const ManageRoutes = () => {
     }
   };
 
+  const fetchRouteMasterData = async () => {
+    try {
+      const res = await axiosInstance.get("/api/route-master");
+      setRouteMasterData(res.data);
+    } catch (err) {
+      console.error("Failed to fetch route master data", err);
+    }
+  };
+
+  const fetchStopMasterData = async () => {
+    try {
+      const res = await axiosInstance.get("/api/stop-master");
+      setStopMasterData(res.data);
+    } catch (err) {
+      console.error("Failed to fetch stop master data", err);
+    }
+  };
+
+  // Cascading dropdown computed values
+  const masterSources = [...new Set(routeMasterData.map((r) => r.source))];
+  const masterDestinations = form.source
+    ? [...new Set(routeMasterData.filter((r) => r.source === form.source).map((r) => r.destination))]
+    : [];
+  const masterRouteIds = form.source && form.destination
+    ? [...new Set(routeMasterData.filter((r) => r.source === form.source && r.destination === form.destination).map((r) => r.routeId))]
+    : [];
+
   useEffect(() => {
     fetchRoutes();
+    fetchRouteMasterData();
+    fetchStopMasterData();
   }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    if (name === "source") {
+      // Reset destination and routeId when source changes
+      setForm({ ...form, source: value, destination: "", routeId: "" });
+    } else if (name === "destination") {
+      // Reset routeId when destination changes
+      setForm({ ...form, destination: value, routeId: "" });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
+  };
+
+  const handleStopNameSelect = (e) => {
+    const selectedName = e.target.value;
+    const matchedStop = stopMasterData.find((s) => s.name === selectedName);
+    if (matchedStop) {
+      setNewStop({
+        ...newStop,
+        name: matchedStop.name,
+        latitude: matchedStop.latitude,
+        longitude: matchedStop.longitude,
+      });
+    } else {
+      setNewStop({ ...newStop, name: selectedName, latitude: "", longitude: "" });
+    }
   };
 
   const handleTripChange = (e, tripIndex) => {
@@ -406,31 +455,36 @@ const ManageRoutes = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Source *
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="source"
                     value={form.source}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     required
-                    placeholder="Enter source location"
-                    list="sourceSuggestions"
-                  />
+                  >
+                    <option value="">-- Select Source --</option>
+                    {masterSources.map((src) => (
+                      <option key={src} value={src}>{src}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Destination *
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="destination"
                     value={form.destination}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     required
-                    placeholder="Enter destination location"
-                    list="destinationSuggestions"
-                  />
+                    disabled={!form.source}
+                  >
+                    <option value="">{form.source ? "-- Select Destination --" : "-- Select Source First --"}</option>
+                    {masterDestinations.map((dest) => (
+                      <option key={dest} value={dest}>{dest}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -475,15 +529,19 @@ const ManageRoutes = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Route ID *
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="routeId"
                     value={form.routeId || ""}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-300 rounded-md"
                     required
-                    placeholder="Enter route ID"
-                  />
+                    disabled={!form.source || !form.destination}
+                  >
+                    <option value="">{form.source && form.destination ? "-- Select Route ID --" : "-- Select Source & Destination First --"}</option>
+                    {masterRouteIds.map((rid) => (
+                      <option key={rid} value={rid}>{rid}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className="pt-4 border-t border-gray-200">
@@ -842,15 +900,18 @@ const ManageRoutes = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Stop Name *
                         </label>
-                        <input
-                          type="text"
+                        <select
                           name="name"
                           ref={stopNameRef}
                           value={newStop.name}
-                          onChange={handleStopChange}
-                          placeholder="e.g., Central Station"
+                          onChange={handleStopNameSelect}
                           className="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                        />
+                        >
+                          <option value="">-- Select Stop --</option>
+                          {stopMasterData.map((s) => (
+                            <option key={s._id} value={s.name}>{s.name}</option>
+                          ))}
+                        </select>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -888,7 +949,8 @@ const ManageRoutes = () => {
                           value={newStop.latitude}
                           onChange={handleStopChange}
                           placeholder="e.g., 40.7128"
-                          className="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                          className="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-gray-100"
+                          readOnly
                         />
                       </div>
                       <div>
@@ -901,7 +963,8 @@ const ManageRoutes = () => {
                           value={newStop.longitude}
                           onChange={handleStopChange}
                           placeholder="e.g., -74.0060"
-                          className="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                          className="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-gray-100"
+                          readOnly
                         />
                       </div>
                       <div className="flex items-end">

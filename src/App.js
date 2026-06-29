@@ -36,6 +36,7 @@ import ManagePOSMachines from "./pages/admin-pages/ManagePosMachine.js";
 import ManageBusPosMapping from "./pages/admin-pages/ManageBusPosMapping.js";
 import PageNotFound from "./pages/PageNotFound.js";
 import Conductors from "./pages/admin-pages/Conductors.js";
+import Drivers from "./pages/admin-pages/Drivers.js";
 import ManageStopPrices from "./pages/admin-pages/ManageStopPrices.js";
 import ManagePasses from "./pages/admin-pages/ManagePasses.js";
 import GoogleLiveMap from "./pages/admin-pages/GoogleLiveMap.js";
@@ -46,6 +47,9 @@ import ConductorReport from "./pages/admin-pages/ConductorReport";
 import FareCalculator from "./pages/FareCalculator";
 import ManageFareCharts from "./pages/admin-pages/ManageFareCharts.js";
 import ChangePassword from "./pages/admin-pages/ChangePassword.js";
+import RouteMaster from "./pages/admin-pages/RouteMaster.js";
+import StopMaster from "./pages/admin-pages/StopMaster.js";
+import ManageShifts from "./pages/admin-pages/ManageShifts.js";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -152,6 +156,14 @@ const App = () => {
               }
             />
             <Route
+              path="/admin/drivers"
+              element={
+                <AdminRoute>
+                  <Drivers />
+                </AdminRoute>
+              }
+            />
+            <Route
               path="/admin/stop-price"
               element={
                 <AdminRoute>
@@ -212,6 +224,30 @@ const App = () => {
               element={
                 <AdminRoute>
                   <ManageBusPosMapping />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/route-master"
+              element={
+                <AdminRoute>
+                  <RouteMaster />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/stop-master"
+              element={
+                <AdminRoute>
+                  <StopMaster />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/manage-shifts"
+              element={
+                <AdminRoute>
+                  <ManageShifts />
                 </AdminRoute>
               }
             />
