@@ -18,6 +18,9 @@ const Buses = () => {
     capacity: "",
     registrationNumber: "",
     status: "Active",
+    chassisNumber: "",
+    classOfVehicle: "",
+    registrationMonthYear: "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -61,6 +64,9 @@ const Buses = () => {
       capacity: "",
       registrationNumber: "",
       status: "Active",
+      chassisNumber: "",
+      classOfVehicle: "",
+      registrationMonthYear: "",
     });
     setIsEditing(false);
     setEditingBusId(null);
@@ -73,6 +79,9 @@ const Buses = () => {
       capacity: bus.capacity,
       registrationNumber: bus.registrationNumber,
       status: bus.status,
+      chassisNumber: bus.chassisNumber || "",
+      classOfVehicle: bus.classOfVehicle || "",
+      registrationMonthYear: bus.registrationMonthYear || "",
     });
     setIsEditing(true);
     setEditingBusId(bus._id);
@@ -235,6 +244,50 @@ const Buses = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Chassis Number *
+                </label>
+                <input
+                  type="text"
+                  name="chassisNumber"
+                  placeholder="Enter chassis number"
+                  value={form.chassisNumber}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Class of Vehicle *
+                </label>
+                <input
+                  type="text"
+                  name="classOfVehicle"
+                  placeholder="Enter class of vehicle"
+                  value={form.classOfVehicle}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Month and Year of Registration *
+                </label>
+                <input
+                  type="month"
+                  name="registrationMonthYear"
+                  value={form.registrationMonthYear}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Status *
                 </label>
                 <select
@@ -249,11 +302,11 @@ const Buses = () => {
                 </select>
               </div>
 
-              <div className="flex items-end gap-3 md:col-span-2 lg:col-span-1">
+              <div className="flex items-end gap-3 col-span-1 md:col-span-2 lg:col-span-3 justify-end mt-4">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {loading
                     ? "Processing..."
@@ -267,7 +320,7 @@ const Buses = () => {
                     resetForm();
                     setShowForm(false);
                   }}
-                  className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md transition-colors"
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-6 rounded-md transition-colors"
                 >
                   Cancel
                 </button>
@@ -298,6 +351,15 @@ const Buses = () => {
                     Reg. Number
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Chassis No.
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Class
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Reg. Month/Year
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -309,7 +371,7 @@ const Buses = () => {
                 {loading ? (
                   Array.from({ length: 5 }).map((_, idx) => (
                     <tr key={idx}>
-                      {Array.from({ length: 6 }).map((_, colIdx) => (
+                      {Array.from({ length: 9 }).map((_, colIdx) => (
                         <td
                           key={colIdx}
                           className="px-6 py-4 whitespace-nowrap"
@@ -341,6 +403,15 @@ const Buses = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {bus.registrationNumber}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {bus.chassisNumber || "N/A"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {bus.classOfVehicle || "N/A"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {bus.registrationMonthYear || "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <span
@@ -378,7 +449,7 @@ const Buses = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan="6"
+                      colSpan="9"
                       className="px-6 py-4 text-center text-sm text-gray-500"
                     >
                       {searchTerm

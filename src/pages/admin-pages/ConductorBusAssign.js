@@ -27,6 +27,7 @@ const ConductorBusAssign = () => {
   });
 
   const [editingId, setEditingId] = useState(null);
+  const [editingAssignment, setEditingAssignment] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ── Fetch buses + all existing assignments ────────────────────────────
@@ -61,14 +62,47 @@ const ConductorBusAssign = () => {
     const fetchAvailable = async () => {
       try {
         setLoadingAvailable(true);
-        // Reset person selections when shift changes
-        setForm((prev) => ({ ...prev, conductorId: "", driverId: "" }));
+        // Reset person selections when shift changes only if we are NOT editing this shift
+        const isEditingThisShift = editingAssignment && editingAssignment.shift === form.shift;
+        if (!isEditingThisShift) {
+          setForm((prev) => ({ ...prev, conductorId: "", driverId: "" }));
+        }
 
         const res = await axiosInstance.get(
           `/api/shifts/available?shift=${form.shift}`
         );
-        setAvailableConductors(res.data.conductors || []);
-        setAvailableDrivers(res.data.drivers || []);
+        let conductors = res.data.conductors || [];
+        let drivers = res.data.drivers || [];
+
+        // If editing and shift matches, ensure currently assigned conductor/driver are included in the available options
+        if (isEditingThisShift && editingAssignment) {
+          const currentConductor = editingAssignment.conductorId;
+          const currentDriver = editingAssignment.driverId;
+
+          if (currentConductor && !conductors.some(c => c._id === currentConductor._id)) {
+            conductors = [
+              {
+                _id: currentConductor._id,
+                name: currentConductor.name,
+                batch_no: editingAssignment.batch_no || currentConductor.batch_no
+              },
+              ...conductors
+            ];
+          }
+          if (currentDriver && !drivers.some(d => d._id === currentDriver._id)) {
+            drivers = [
+              {
+                _id: currentDriver._id,
+                name: currentDriver.name,
+                batch_no: editingAssignment.driver_batch_no || currentDriver.batch_no
+              },
+              ...drivers
+            ];
+          }
+        }
+
+        setAvailableConductors(conductors);
+        setAvailableDrivers(drivers);
       } catch (err) {
         toast.error("Failed to load available staff for this shift");
         setAvailableConductors([]);
@@ -79,7 +113,7 @@ const ConductorBusAssign = () => {
     };
 
     fetchAvailable();
-  }, [form.shift]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [form.shift, editingAssignment]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Handle form field change ──────────────────────────────────────────
   const handleChange = (field, value) => {
@@ -107,6 +141,11 @@ const ConductorBusAssign = () => {
 
     if (!bus || !conductor || !driver) {
       toast.error("Invalid selection — please re-select");
+      return;
+    }
+
+    const actionText = editingId ? "update" : "save";
+    if (!window.confirm(`Are you sure you want to ${actionText} this assignment?`)) {
       return;
     }
 
@@ -146,6 +185,7 @@ const ConductorBusAssign = () => {
   const handleEdit = async (assignment) => {
     const assignedShift = assignment.shift || "Morning";
     setEditingId(assignment._id);
+    setEditingAssignment(assignment);
 
     // Set shift first so the useEffect fetches available staff
     setForm({
@@ -174,6 +214,7 @@ const ConductorBusAssign = () => {
   const resetForm = () => {
     setForm({ shift: "", busId: "", conductorId: "", driverId: "" });
     setEditingId(null);
+    setEditingAssignment(null);
     setAvailableConductors([]);
     setAvailableDrivers([]);
   };
@@ -257,8 +298,8 @@ const ConductorBusAssign = () => {
               <select
                 value={form.busId}
                 onChange={(e) => handleChange("busId", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                disabled={!form.shift}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition disabled:bg-gray-100 disabled:cursor-not-allowed"
+                disabled={!form.shift || !!editingId}
               >
                 <option value="">Select Bus</option>
                 {buses.map((bus) => (

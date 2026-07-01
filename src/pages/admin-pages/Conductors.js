@@ -12,6 +12,7 @@ const ManageConductors = () => {
         name: "",
         password: "",
         type: "Temporary", // default value
+        phone_no: "",
     });
     const [conductors, setConductors] = useState([]);
     const [editingId, setEditingId] = useState(null);
@@ -54,7 +55,7 @@ const ManageConductors = () => {
             setLoading(true);
             if (editingId) {
                 // update only name, type + optional password
-                const updateData = { name: form.name, type: form.type };
+                const updateData = { name: form.name, type: form.type, phone_no: form.phone_no };
                 if (form.password) updateData.password = form.password;
 
                 await axiosInstance.put(`/api/conductors/${editingId}`, updateData);
@@ -79,6 +80,7 @@ const ManageConductors = () => {
             name: conductor.name,
             password: "", // left empty, optional for update
             type: conductor.type || "Temporary",
+            phone_no: conductor.phone_no || "",
         });
         setEditingId(conductor._id);
         setShowForm(true);
@@ -100,7 +102,7 @@ const ManageConductors = () => {
     };
 
     const resetForm = () => {
-        setForm({ batch_no: "", name: "", password: "", type: "Temporary" });
+        setForm({ batch_no: "", name: "", password: "", type: "Temporary", phone_no: "" });
         setEditingId(null);
     };
 
@@ -221,6 +223,21 @@ const ManageConductors = () => {
                                 </select>
                             </div>
 
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Phone Number *
+                                </label>
+                                <input
+                                    type="tel"
+                                    name="phone_no"
+                                    value={form.phone_no || ""}
+                                    onChange={handleChange}
+                                    placeholder="Enter phone number"
+                                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                    required
+                                />
+                            </div>
+
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     {editingId
@@ -302,6 +319,9 @@ const ManageConductors = () => {
                                         Name
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Phone Number
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Type
                                     </th>
                                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -313,7 +333,7 @@ const ManageConductors = () => {
                                 {loading ? (
                                     Array.from({ length: 5 }).map((_, idx) => (
                                         <tr key={idx}>
-                                            {Array.from({ length: 4 }).map(
+                                            {Array.from({ length: 5 }).map(
                                                 (_, colIdx) => (
                                                     <td
                                                         key={colIdx}
@@ -336,6 +356,9 @@ const ManageConductors = () => {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {c.name}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {c.phone_no || "N/A"}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {c.type}
@@ -367,7 +390,7 @@ const ManageConductors = () => {
                                 ) : (
                                     <tr>
                                         <td
-                                            colSpan="4"
+                                            colSpan="5"
                                             className="px-6 py-4 text-center text-sm text-gray-500"
                                         >
                                             {searchTerm

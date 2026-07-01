@@ -18,7 +18,6 @@ import { logoutUser } from "../../slices/authSlice";
 import smtLogo from "../../assets/images/smt-logo.png";
 // import ConductorsPage from "./Conductors.js"; // Import the ConductorsPage
 
-// Navigation items
 const navItems = [
   {
     path: "/admin/dashboard",
@@ -34,6 +33,7 @@ const navItems = [
       { path: "/admin/buses", label: "Manage Buses" },
       { path: "/admin/bus-pos-mapping", label: "POS Mapping" },
       { path: "/admin/manage-bus-route-mapping", label: "Route Mapping" },
+      { path: "/admin/conductor-bus-assign", label: "Conductor Bus Assign" },
     ],
   },
   {
@@ -60,20 +60,20 @@ const navItems = [
     exact: true,
   },
   {
-    label: "Conductors",
+    label: "Conductor/Driver",
     icon: <FiUserCheck className="text-lg" />,
     submenu: [
       {
         path: "/admin/conductors",
-        label: "manage conductors",
+        label: "Manage Conductors",
+      },
+      {
+        path: "/admin/drivers",
+        label: "Manage Drivers",
       },
       {
         path: "/admin/conductor-report",
         label: "Conductor Report",
-      },
-      {
-        path: "/admin/conductor-bus-assign",
-        label: "Conductor Bus Assign",
       },
       {
         path: "/admin/manage-shifts",
@@ -83,27 +83,9 @@ const navItems = [
     exact: true,
   },
   {
-    label: "Drivers",
-    icon: <FiUserCheck className="text-lg" />,
-    submenu: [
-      {
-        path: "/admin/drivers",
-        label: "Manage Drivers",
-      },
-    ],
-    exact: true,
-  },
-  // {
-  //   path: "/admin/stop-price",
-  //   label: "Stop Prices",
-  //   icon: <FiMap className="text-lg" />, // you can change to another icon
-  //   exact: true,
-  // },
-
-  {
     path: "/admin/passes",
     label: "Passes",
-    icon: <FiMap className="text-lg" />, // you can change to another icon
+    icon: <FiMap className="text-lg" />,
     exact: true,
   },
   {
@@ -113,15 +95,15 @@ const navItems = [
     exact: true,
   },
   {
-  label: "Settings",
-  icon: <FiSettings className="text-lg" />,
-  submenu: [
-    {
-      path: "/admin/change-password",
-      label: "Change Password",
-    },
-  ],
-}
+    label: "Settings",
+    icon: <FiSettings className="text-lg" />,
+    submenu: [
+      {
+        path: "/admin/change-password",
+        label: "Change Password",
+      },
+    ],
+  }
 ];
 
 const AdminLayout = ({ children }) => {
@@ -150,6 +132,7 @@ const AdminLayout = ({ children }) => {
   };
 
   const isActive = (path, exact = false) => {
+    if (!path) return false;
     return exact
       ? location.pathname === path
       : location.pathname.startsWith(path);
@@ -198,8 +181,9 @@ const AdminLayout = ({ children }) => {
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const hasSubmenu = item.submenu && item.submenu.length > 0;
-            const isItemActive = isActive(item.path, item.exact);
-            const isExpanded = expandedMenus[item.label] || isItemActive;
+            const isSubmenuActive = hasSubmenu && item.submenu.some(subItem => isActive(subItem.path, true));
+            const isItemActive = isActive(item.path, item.exact) || isSubmenuActive;
+            const isExpanded = expandedMenus[item.label] !== undefined ? expandedMenus[item.label] : isItemActive;
 
             return (
               <div key={item.label} className="space-y-1">
