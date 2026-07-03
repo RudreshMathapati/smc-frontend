@@ -52,6 +52,7 @@ const ManagePOSMachines = () => {
           form
         );
         toast.success("POS Machine updated successfully");
+        alert("POS Machine updated successfully");
       } else {
         await axiosInstance.post("/api/pos-machines", form);
         toast.success("POS Machine added successfully");

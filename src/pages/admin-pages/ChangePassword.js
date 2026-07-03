@@ -37,6 +37,7 @@ const ChangePassword = () => {
       });
 
       toast.success("Password updated successfully");
+      alert("Password updated successfully");
 
       setForm({
         currentPassword: "",

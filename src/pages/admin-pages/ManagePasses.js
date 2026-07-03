@@ -47,6 +47,7 @@ const ManagePasses = () => {
       if (editingId) {
         await axiosInstance.put(`/api/passes/${editingId}`, form);
         toast.success("Pass updated successfully");
+        alert("Pass updated successfully");
       } else {
         await axiosInstance.post("/api/passes", form);
         toast.success("Pass added successfully");

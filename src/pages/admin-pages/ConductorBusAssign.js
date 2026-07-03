@@ -164,6 +164,7 @@ const ConductorBusAssign = () => {
       if (editingId) {
         await axiosInstance.put(`/api/conductor-bus/${editingId}`, payload);
         toast.success("Assignment updated successfully");
+        alert("Assignment updated successfully");
       } else {
         await axiosInstance.post("/api/conductor-bus", {
           ...payload,

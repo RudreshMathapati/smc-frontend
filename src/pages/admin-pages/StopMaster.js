@@ -48,6 +48,7 @@ const StopMaster = () => {
             if (editingId) {
                 await axiosInstance.put(`/api/stop-master/${editingId}`, form);
                 toast.success("Stop updated successfully");
+                alert("Stop updated successfully");
             } else {
                 await axiosInstance.post("/api/stop-master", form);
                 toast.success("Stop added successfully");

@@ -75,6 +75,7 @@ const ManageBusPosMapping = () => {
       if (isEditing) {
         await axiosInstance.put(`/api/bus-pos-mapping/${editingId}`, form);
         toast.success("Assignment updated successfully");
+        alert("Assignment updated successfully");
       } else {
         await axiosInstance.post(`/api/bus-pos-mapping`, form);
         toast.success("Assignment created successfully");

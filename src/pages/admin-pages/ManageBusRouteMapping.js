@@ -84,6 +84,7 @@ const ManageBusRouteMapping = () => {
       if (editingId) {
         await axiosInstance.put(`/api/bus-routes-mapping/${editingId}`, form);
         toast.success("Mapping updated successfully");
+        alert("Mapping updated successfully");
       } else {
         await axiosInstance.post(`/api/bus-routes-mapping`, form);
         toast.success("Mapping created successfully");

@@ -48,6 +48,7 @@ const ManageStopPrices = () => {
       if (editingId) {
         await axiosInstance.put(`/api/stop-prices/${editingId}`, form);
         toast.success("Stop price updated successfully");
+        alert("Stop price updated successfully");
       } else {
         await axiosInstance.post("/api/stop-prices", form);
         toast.success("Stop price added successfully");

@@ -49,6 +49,7 @@ const ManageDrivers = () => {
                 const updateData = { name: form.name, type: form.type };
                 await axiosInstance.put(`/api/drivers/${editingId}`, updateData);
                 toast.success("Driver updated successfully");
+                alert("Driver updated successfully");
             } else {
                 await axiosInstance.post("/api/drivers/register", form);
                 toast.success("Driver added successfully");

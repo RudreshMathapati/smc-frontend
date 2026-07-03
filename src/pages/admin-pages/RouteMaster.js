@@ -48,6 +48,7 @@ const RouteMaster = () => {
             if (editingId) {
                 await axiosInstance.put(`/api/route-master/${editingId}`, form);
                 toast.success("Route master entry updated successfully");
+                alert("Route master entry updated successfully");
             } else {
                 await axiosInstance.post("/api/route-master", form);
                 toast.success("Route master entry added successfully");

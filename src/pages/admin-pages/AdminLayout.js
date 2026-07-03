@@ -31,9 +31,8 @@ const navItems = [
     icon: <FiTruck className="text-lg" />,
     submenu: [
       { path: "/admin/buses", label: "Manage Buses" },
-      { path: "/admin/bus-pos-mapping", label: "POS Mapping" },
+      // { path: "/admin/bus-pos-mapping", label: "POS Mapping" },
       { path: "/admin/manage-bus-route-mapping", label: "Route Mapping" },
-      { path: "/admin/conductor-bus-assign", label: "Conductor Bus Assign" },
     ],
   },
   {
@@ -78,6 +77,10 @@ const navItems = [
       {
         path: "/admin/manage-shifts",
         label: "Manage Shifts",
+      },
+      {
+        path: "/admin/conductor-bus-assign",
+        label: "Bus Assign",
       },
     ],
     exact: true,

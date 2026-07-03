@@ -60,6 +60,7 @@ const ManageConductors = () => {
 
                 await axiosInstance.put(`/api/conductors/${editingId}`, updateData);
                 toast.success("Conductor updated successfully");
+                alert("Conductor updated successfully");
             } else {
                 await axiosInstance.post("/api/conductors/register", form);
                 toast.success("Conductor added successfully");

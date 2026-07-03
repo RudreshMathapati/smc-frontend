@@ -19,8 +19,7 @@ const Buses = () => {
     registrationNumber: "",
     status: "Active",
     chassisNumber: "",
-    classOfVehicle: "",
-    registrationMonthYear: "",
+    makersName: "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -41,6 +40,7 @@ const Buses = () => {
           form
         );
         toast.success("Bus updated successfully");
+        alert("Bus updated successfully");
       } else {
         await axiosInstance.post("/api/buses", form);
         toast.success("Bus added successfully");
@@ -65,8 +65,7 @@ const Buses = () => {
       registrationNumber: "",
       status: "Active",
       chassisNumber: "",
-      classOfVehicle: "",
-      registrationMonthYear: "",
+      makersName: "",
     });
     setIsEditing(false);
     setEditingBusId(null);
@@ -80,8 +79,7 @@ const Buses = () => {
       registrationNumber: bus.registrationNumber,
       status: bus.status,
       chassisNumber: bus.chassisNumber || "",
-      classOfVehicle: bus.classOfVehicle || "",
-      registrationMonthYear: bus.registrationMonthYear || "",
+      makersName: bus.makersName || "",
     });
     setIsEditing(true);
     setEditingBusId(bus._id);
@@ -229,12 +227,12 @@ const Buses = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Registration Number *
+                  Registered Number *
                 </label>
                 <input
                   type="text"
                   name="registrationNumber"
-                  placeholder="Enter registration number"
+                  placeholder="Enter registered number"
                   value={form.registrationNumber}
                   onChange={handleChange}
                   required
@@ -259,27 +257,13 @@ const Buses = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Class of Vehicle *
+                  Makers Name *
                 </label>
                 <input
                   type="text"
-                  name="classOfVehicle"
-                  placeholder="Enter class of vehicle"
-                  value={form.classOfVehicle}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Month and Year of Registration *
-                </label>
-                <input
-                  type="month"
-                  name="registrationMonthYear"
-                  value={form.registrationMonthYear}
+                  name="makersName"
+                  placeholder="Enter makers name"
+                  value={form.makersName}
                   onChange={handleChange}
                   required
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
@@ -354,10 +338,7 @@ const Buses = () => {
                     Chassis No.
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Class
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Reg. Month/Year
+                    Makers Name
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
@@ -371,7 +352,7 @@ const Buses = () => {
                 {loading ? (
                   Array.from({ length: 5 }).map((_, idx) => (
                     <tr key={idx}>
-                      {Array.from({ length: 9 }).map((_, colIdx) => (
+                      {Array.from({ length: 8 }).map((_, colIdx) => (
                         <td
                           key={colIdx}
                           className="px-6 py-4 whitespace-nowrap"
@@ -408,10 +389,7 @@ const Buses = () => {
                         {bus.chassisNumber || "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {bus.classOfVehicle || "N/A"}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {bus.registrationMonthYear || "N/A"}
+                        {bus.makersName || "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <span
@@ -449,7 +427,7 @@ const Buses = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan="9"
+                      colSpan="8"
                       className="px-6 py-4 text-center text-sm text-gray-500"
                     >
                       {searchTerm

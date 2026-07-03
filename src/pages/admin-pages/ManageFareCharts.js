@@ -145,6 +145,7 @@ const ManageFareCharts = () => {
       await axiosInstance.put("/api/farechart", { fares: cleanedFares });
 
       toast.success("Fare chart updated successfully");
+      alert("Fare chart updated successfully");
       fetchFareChart();
       fetchHistory();
     } catch (err) {

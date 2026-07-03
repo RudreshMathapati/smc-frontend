@@ -298,6 +298,7 @@ const ManageRoutes = () => {
       if (editingRouteId) {
         await axiosInstance.put(`/api/routes/${editingRouteId}`, form);
         toast.success("Route updated successfully");
+        alert("Route updated successfully");
       } else {
         await axiosInstance.post("/api/routes", form);
         toast.success("Route added successfully");
